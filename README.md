@@ -17,18 +17,18 @@ After a world is picked, the familiar four boxes appear in that world’s pictur
 
 ## Live URL — Mac no longer required
 
-**https://xyx-eXYGEN.github.io/little-garage/**
+**https://xyx-exygen.github.io/little-garage-play/**
 
 This is the always-on public HTTPS page. The Mac can sleep. You do **not** need `localhost:8765` or the Python `http.server`. Phone and iPad share this one URL, on any network (home Wi-Fi, cellular, grandparents’ house).
 
-GitHub Pages serves the `docs/` folder (a copy of `play-garden/`). After editing the play page, copy `play-garden/` into `docs/` before pushing.
+Public play files: [xyx-eXYGEN/little-garage-play](https://github.com/xyx-eXYGEN/little-garage-play). The parent handbook stays in the private workspace repo. After editing `play-garden/`, copy it into `docs/` **and** update the public `little-garage-play` repo before the live page will change.
 
 ### Open on iPad / iPhone (Safari, Add to Home Screen)
 
 This is a home-screen web app, not an App Store app.
 
 1. On the **iPhone or iPad**, open **Safari** (not Chrome).
-2. Go to **https://xyx-eXYGEN.github.io/little-garage/**
+2. Go to **https://xyx-exygen.github.io/little-garage-play/**
 3. Tap the **Share** button (square with an arrow pointing up).
 4. Scroll and tap **Add to Home Screen** / **添加到主屏幕**.
 5. Name it **Little Garage** or **小车库**, then tap Add.
