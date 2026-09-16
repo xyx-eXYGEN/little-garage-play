@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-20";
+const PHOTO_V = "parent-21";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -4166,8 +4166,8 @@ function renderBookRead() {
   const look = `${renderTopicAnchor(book)}
       <p class="look-kicker">读 · Read · ${round.page + 1}/${book.pages.length}</p>
       <div class="book-page-art">${sbImg(book.id, page.id, page.en, "scene book-scene")}</div>
-      <h2>${escapeHtml(page.en)}</h2>
-      <p>${loadState().bilingual ? escapeHtml(page.zh) : ""}</p>
+      <h2 class="book-read-en">${escapeHtml(page.en)}</h2>
+      <p class="book-read-zh">${loadState().bilingual ? escapeHtml(page.zh) : ""}</p>
       ${langButtons(page.en, page.zh)}
       ${renderGrownupScript(book, round.showCarNudge)}`;
   const nav = `<div class="book-nav">

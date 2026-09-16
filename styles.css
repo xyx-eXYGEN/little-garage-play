@@ -2988,9 +2988,22 @@ svg.where-choice {
 .book-page-art img.photo.book-scene {
   width: 100%;
   height: auto;
-  max-height: min(46vh, 380px);
+  max-height: min(38vh, 320px);
   object-fit: contain;
   background: #fff8e8;
+}
+
+.look-card h2.book-read-en {
+  font-size: 1.12rem;
+  line-height: 1.45;
+  font-weight: 650;
+  margin: 4px 0 6px;
+}
+
+.look-card p.book-read-zh {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  color: var(--ink);
 }
 
 .book-nav {

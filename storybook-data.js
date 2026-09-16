@@ -1,5 +1,5 @@
-/* Original Story Time books. Short plots (one character, one problem, one ending).
-   Topic maintenance is the skill: stay with THIS story. Not copyrighted test items. */
+/* Original Story Time books. One character, one problem, one ending.
+   Topic maintenance: extra detail stays ON this story. Not copyrighted test items. */
 const STORY_BOOKS = [
   {
     id: "hat",
@@ -12,18 +12,34 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: where is the hat?",
     parentCarZh: "车等到这本书讲完。现在：帽子在哪里？",
     pages: [
-      { id: "p1", en: "Min wears a yellow hat.", zh: "小明戴着小黄帽。" },
-      { id: "p2", en: "The wind blows. The hat flies.", zh: "风吹来。帽子飞走了。" },
-      { id: "p3", en: "Min looks for the hat.", zh: "小明找帽子。" },
-      { id: "p4", en: "Min finds the hat. Hooray!", zh: "小明找到帽子了。好呀！" },
+      {
+        id: "p1",
+        en: "This is Min. He loves his yellow hat. Soft. Warm. Just right. “My hat,” says Min.",
+        zh: "这是小明。他最喜欢这顶小黄帽。软软的，暖暖的，刚刚好。小明说：「我的帽子。」",
+      },
+      {
+        id: "p2",
+        en: "Whoosh! A big wind comes. The yellow hat flies up, up, up. “Oh no! My hat!” Min reaches high.",
+        zh: "呼——大风来了！小黄帽飞呀飞，飞得好高。「哎呀！我的帽子！」小明伸手去抓。",
+      },
+      {
+        id: "p3",
+        en: "Min looks and looks, because the hat is gone. Yellow hat, yellow hat… there! In the tree.",
+        zh: "小明找啊找，因为帽子不见了。小黄帽，小黄帽……啊，在树上！",
+      },
+      {
+        id: "p4",
+        en: "Min holds the yellow hat. He puts it back on. Soft again. Warm again. “Hooray! My hat.”",
+        zh: "小明捧着小黄帽，戴回去。又软又暖。「耶！我的帽子。」",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p1", "p2", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "Who wears the yellow hat?",
-        promptZh: "谁戴着小黄帽？",
+        promptEn: "Min’s hat is soft and warm. Who wears the yellow hat?",
+        promptZh: "帽子软软的、暖暖的。谁戴着小黄帽？",
         correct: { book: "hat", file: "p1" },
         foils: [
           { book: "duck", file: "p1" },
@@ -33,8 +49,8 @@ const STORY_BOOKS = [
       },
       {
         skill: "sequence",
-        promptEn: "What happened first?",
-        promptZh: "先发生了什么？",
+        promptEn: "The wind went whoosh. What happened first?",
+        promptZh: "风呼一声吹来。先发生了什么？",
         correct: { book: "hat", file: "p1" },
         foils: [
           { book: "hat", file: "p2" },
@@ -62,25 +78,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: where is the umbrella?",
     parentCarZh: "车等到这本书讲完。现在：伞在哪里？",
     pages: [
-      { id: "p1", en: "The sky is gray.", zh: "天灰灰的。" },
-      { id: "p2", en: "Rain, rain, rain.", zh: "下雨了，下雨了。" },
-      { id: "p3", en: "We open the umbrella.", zh: "我们打开伞。" },
-      { id: "p4", en: "We jump in a puddle. Splash!", zh: "我们跳水坑。哗啦！" },
+      {
+        id: "p1",
+        en: "Bo looks up. The sky is gray and quiet. “I think rain is coming,” he says. He holds his yellow umbrella.",
+        zh: "小波抬头看。天灰灰的，静静的。他说：「好像要下雨了。」手里握着黄雨伞。",
+      },
+      {
+        id: "p2",
+        en: "Pitter-patter, pitter-patter. Rain, rain, rain. Cool drops kiss Bo’s raincoat. The sidewalk shines.",
+        zh: "啪嗒，啪嗒。下雨了，下雨了。凉凉的雨点亲到雨衣上。地面亮亮的。",
+      },
+      {
+        id: "p3",
+        en: "Bo pops the umbrella open, because the rain is coming down. “Stay dry,” he laughs. Drip, drip, drip on the yellow top.",
+        zh: "雨越下越大，小波把伞撑开。「别淋湿啰，」他笑。黄伞顶上滴滴答答。",
+      },
+      {
+        id: "p4",
+        en: "A puddle! Bo jumps. Splash! Water flies. “Again!” he shouts. Rain, rain, rain — and a happy splash.",
+        zh: "有水坑！小波跳下去。哗啦！水花飞起来。他喊：「再一次！」下雨了，还好好玩。",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p2", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "What do we open in the rain?",
-        promptZh: "下雨时我们打开什么？",
+        promptEn: "Bo wants to stay dry. What does he open in the rain?",
+        promptZh: "小波不想淋湿。下雨时他打开什么？",
         correct: { book: "rain", file: "p3" },
         foils: [{ book: "hat", file: "topic" }, { book: "ball", file: "topic" }, { kind: "car" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened last?",
-        promptZh: "最后发生了什么？",
+        promptEn: "Splash in the puddle. What happened last?",
+        promptZh: "水坑哗啦一声。最后发生了什么？",
         correct: { book: "rain", file: "p4" },
         foils: [
           { book: "rain", file: "p1" },
@@ -108,25 +140,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: what is the duck doing?",
     parentCarZh: "车等到这本书讲完。现在：小鸭子在做什么？",
     pages: [
-      { id: "p1", en: "Little Duck sees a stick.", zh: "小鸭子看见一根树枝。" },
-      { id: "p2", en: "The nest is broken.", zh: "鸟窝坏了。" },
-      { id: "p3", en: "Duck brings the stick.", zh: "鸭子衔来树枝。" },
-      { id: "p4", en: "The nest is safe. Thank you!", zh: "鸟窝好了。谢谢！" },
+      {
+        id: "p1",
+        en: "Little Duck waddles in the grass. Soft grass, tickle-tickle. “A stick!” she peeps. A brown stick, just the right size.",
+        zh: "小鸭子在草里摇摇走。草软软的，有点痒。她叫：「树枝！」棕色的小树枝，大小刚刚好。",
+      },
+      {
+        id: "p2",
+        en: "Oh. The nest in the tree is broken. Sticks falling. Little Duck feels worried. “The nest needs help.”",
+        zh: "啊，树上的鸟窝坏了。树枝掉下来。小鸭子心里着急：「鸟窝需要帮忙。」",
+      },
+      {
+        id: "p3",
+        en: "Little Duck picks up the stick, because the nest is broken. She carries it. Waddle, waddle, to the tree.",
+        zh: "因为鸟窝坏了，小鸭子衔起树枝。摇摇走，摇摇走，走到树下。",
+      },
+      {
+        id: "p4",
+        en: "The nest is whole again. Safe. A little bird sings thank you. Little Duck feels proud. “I can help.”",
+        zh: "鸟窝又圆圆的了，安全了。小鸟唱歌说谢谢。小鸭子心里暖暖的：「我会帮忙。」",
+      },
     ],
     seq: ["p1", "p3", "p4"],
     belongOn: ["p1", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "Who helps with the stick?",
-        promptZh: "谁衔来树枝帮忙？",
+        promptEn: "The nest was broken. Who brings the stick to help?",
+        promptZh: "鸟窝坏了。谁衔来树枝帮忙？",
         correct: { book: "duck", file: "p3" },
         foils: [{ book: "hat", file: "p1" }, { book: "help", file: "p2" }, { kind: "car" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened last?",
-        promptZh: "最后发生了什么？",
+        promptEn: "The little bird says thank you. What happened last?",
+        promptZh: "小鸟说谢谢。最后发生了什么？",
         correct: { book: "duck", file: "p4" },
         foils: [
           { book: "duck", file: "p1" },
@@ -154,25 +202,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: who is on the swing?",
     parentCarZh: "车等到这本书讲完。现在：谁在秋千上？",
     pages: [
-      { id: "p1", en: "The park has a red swing.", zh: "公园里有红色秋千。" },
-      { id: "p2", en: "I sit on the swing.", zh: "我坐上秋千。" },
-      { id: "p3", en: "I swing high.", zh: "我荡得高高的。" },
-      { id: "p4", en: "I get down. All done.", zh: "我下来了。好了。" },
+      {
+        id: "p1",
+        en: "Mei is at the park. She sees a red swing. Empty. Waiting. “That swing looks fun,” she says.",
+        zh: "小美来公园。她看见红色秋千。空空的，好像在等她。她说：「那个秋千好好玩。」",
+      },
+      {
+        id: "p2",
+        en: "Mei sits on the red swing. The seat is smooth. She holds the ropes. “Ready,” she whispers.",
+        zh: "小美坐上红色秋千。座位滑滑的。她抓好绳子，小声说：「好了。」",
+      },
+      {
+        id: "p3",
+        en: "Swing, swing, swing. Mei goes high. Wind in her hair. Her tummy feels fizzy. “Whee!”",
+        zh: "荡啊荡啊荡。小美荡得好高。风吹着头发。肚子里麻麻的。她喊：「耶——！」",
+      },
+      {
+        id: "p4",
+        en: "Mei’s feet find the ground. She hops down. “All done, red swing.” She feels happy and a little wobbly.",
+        zh: "小美的脚碰到地，跳下来。「好了，红色秋千。」心里开心，腿还有点软。",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p2", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "Where is the swing?",
-        promptZh: "秋千在哪里？",
+        promptEn: "Mei is at the park. Where is the red swing?",
+        promptZh: "小美在公园。红色秋千在哪里？",
         correct: { book: "swing", file: "p1" },
         foils: [{ book: "teddy", file: "p3" }, { book: "noodles", file: "p3" }, { kind: "car" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened first?",
-        promptZh: "先发生了什么？",
+        promptEn: "The swing was empty, waiting. What happened first?",
+        promptZh: "秋千空空的，在等她。先发生了什么？",
         correct: { book: "swing", file: "p1" },
         foils: [
           { book: "swing", file: "p3" },
@@ -200,25 +264,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: who is playing with the ball?",
     parentCarZh: "车等到这本书讲完。现在：谁在玩球？",
     pages: [
-      { id: "p1", en: "I have a red ball.", zh: "我有一个红皮球。" },
-      { id: "p2", en: "A friend comes.", zh: "一个朋友来了。" },
-      { id: "p3", en: "We share the ball.", zh: "我们一起玩球。" },
-      { id: "p4", en: "We smile. We are friends.", zh: "我们笑。我们是朋友。" },
+      {
+        id: "p1",
+        en: "Jun has a red ball. Bouncy. Shiny. He holds it tight. The playground feels a little quiet.",
+        zh: "小军有一个红皮球。弹弹的，亮亮的。他抱得紧紧的。操场有一点点安静。",
+      },
+      {
+        id: "p2",
+        en: "A friend comes. Lili waves. “Hi! Can I play?” Jun looks at the red ball. He is not sure yet.",
+        zh: "一个朋友来了。丽丽挥手：「嗨！我可以玩吗？」小军看看红皮球，还在想。",
+      },
+      {
+        id: "p3",
+        en: "They share the red ball. Roll. Catch. Giggle. “Your turn!” “Your turn!” The ball is happier with two.",
+        zh: "他们一起玩红皮球。滚过去，接住，咯咯笑。「换你！」「换你！」两个人玩，球更开心。",
+      },
+      {
+        id: "p4",
+        en: "Jun and Lili sit in the grass. The red ball rests between them. They smile. “We are friends,” says Lili.",
+        zh: "小军和丽丽坐在草上。红皮球放在中间。他们笑。丽丽说：「我们是朋友。」",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p1", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "What do the friends share?",
-        promptZh: "朋友们一起玩什么？",
+        promptEn: "They take turns. What do the friends share?",
+        promptZh: "他们轮流玩。朋友们一起玩什么？",
         correct: { book: "ball", file: "p3" },
         foils: [{ book: "teddy", file: "topic" }, { book: "noodles", file: "topic" }, { kind: "car" }],
       },
       {
         skill: "inference",
-        promptEn: "How do they feel at the end?",
-        promptZh: "最后他们心里怎么样？",
+        promptEn: "Lili says, “We are friends.” How do they feel at the end?",
+        promptZh: "丽丽说「我们是朋友。」最后他们心里怎么样？",
         correct: { book: "ball", file: "p4" },
         foils: [
           { book: "ball", file: "p1" },
@@ -246,25 +326,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: where is teddy?",
     parentCarZh: "车等到这本书讲完。现在：小熊在哪里？",
     pages: [
-      { id: "p1", en: "The moon is out.", zh: "月亮出来了。" },
-      { id: "p2", en: "I hug teddy.", zh: "我抱抱小熊。" },
-      { id: "p3", en: "We get in bed.", zh: "我们上床。" },
-      { id: "p4", en: "Eyes closed. Night-night.", zh: "闭上眼睛。晚安。" },
+      {
+        id: "p1",
+        en: "The moon is round and yellow. Hao holds teddy by the window. “Look, teddy. Night is here.” The room is quiet.",
+        zh: "月亮圆圆的、黄黄的。小豪抱着小熊站在窗边。「小熊你看，晚上来了。」房间静静的。",
+      },
+      {
+        id: "p2",
+        en: "Hao hugs teddy close. Teddy is warm and a little fuzzy. Hao’s shoulders drop. “I like you, teddy.”",
+        zh: "小豪把小熊抱紧。小熊暖暖的，毛毛的。小豪的肩膀放松了。「我喜欢你，小熊。」",
+      },
+      {
+        id: "p3",
+        en: "They climb into bed, because it is sleepy time. Quilt up. Teddy under Hao’s chin. “Stay with me.”",
+        zh: "该睡觉了，他们爬上床。被子拉上来。小熊靠在小豪下巴边。「陪我。」",
+      },
+      {
+        id: "p4",
+        en: "Eyes closed. Slow breaths. “Night-night, teddy.” Teddy is still warm. The moon watches. All quiet.",
+        zh: "眼睛闭上。呼吸慢慢的。「晚安，小熊。」小熊还是暖的。月亮看着他们。好安静。",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p2", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "Who do we hug at bedtime?",
-        promptZh: "睡觉前我们抱谁？",
+        promptEn: "Teddy is warm and fuzzy. Who does Hao hug at bedtime?",
+        promptZh: "小熊暖暖的、毛毛的。睡觉前小豪抱谁？",
         correct: { book: "teddy", file: "p2" },
         foils: [{ book: "duck", file: "topic" }, { book: "grandma", file: "topic" }, { kind: "car" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened last?",
-        promptZh: "最后发生了什么？",
+        promptEn: "Hao says night-night. What happened last?",
+        promptZh: "小豪说晚安。最后发生了什么？",
         correct: { book: "teddy", file: "p4" },
         foils: [
           { book: "teddy", file: "p1" },
@@ -292,25 +388,41 @@ const STORY_BOOKS = [
     parentCarEn: "Other cars after this book. Right now: where is the yellow bus?",
     parentCarZh: "别的车等到这本书讲完。现在：小巴士在哪里？",
     pages: [
-      { id: "p1", en: "The yellow bus comes.", zh: "黄色小巴士来了。" },
-      { id: "p2", en: "I get on the bus.", zh: "我上巴士。" },
-      { id: "p3", en: "I sit by the window.", zh: "我坐在窗边。" },
-      { id: "p4", en: "The bus stops. Hello!", zh: "巴士停了。你好！" },
+      {
+        id: "p1",
+        en: "Tao hears a rumble. The yellow bus comes down the quiet street. “My bus!” He waves. The bus slows.",
+        zh: "小涛听见轰隆轰隆。黄色小巴士从安静的街上开来。「我的巴士！」他挥手。巴士慢下来。",
+      },
+      {
+        id: "p2",
+        en: "The door opens. Step, step. Tao gets on the yellow bus. It smells a little like seats and morning. “I’m in.”",
+        zh: "门打开。踏，踏。小涛走上黄色小巴士。有一点点座位的味道，还有早上的味道。他说：「我上来了。」",
+      },
+      {
+        id: "p3",
+        en: "Tao sits by the window. Trees slide by. He taps the glass. “Hello, trees.” The yellow bus hums.",
+        zh: "小涛坐在窗边。树从旁边滑过去。他轻轻敲玻璃：「树你好。」黄色小巴士嗡嗡响。",
+      },
+      {
+        id: "p4",
+        en: "The yellow bus stops. The door opens again. Friends wait. “Hello!” says Tao. He is glad the bus brought him.",
+        zh: "黄色小巴士停了。门又打开。朋友在等。小涛说：「你好！」巴士把他送来，他好高兴。",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p1", "p2", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "What comes down the street?",
-        promptZh: "街上开来什么？",
+        promptEn: "Tao hears a rumble. What comes down the street?",
+        promptZh: "小涛听见轰隆轰隆。街上开来什么？",
         correct: { book: "bus", file: "p1" },
         foils: [{ kind: "car" }, { book: "duck", file: "p1" }, { book: "help", file: "p1" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened first?",
-        promptZh: "先发生了什么？",
+        promptEn: "The yellow bus came first. What happened first?",
+        promptZh: "黄色小巴士先来。先发生了什么？",
         correct: { book: "bus", file: "p1" },
         foils: [
           { book: "bus", file: "p3" },
@@ -338,25 +450,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: where is the bowl?",
     parentCarZh: "车等到这本书讲完。现在：碗在哪里？",
     pages: [
-      { id: "p1", en: "The pot is hot.", zh: "锅是热的。" },
-      { id: "p2", en: "Noodles go in.", zh: "面条下锅。" },
-      { id: "p3", en: "We slurp noodles. Yum.", zh: "我们吃面。好吃。" },
-      { id: "p4", en: "The bowl is empty. All done.", zh: "碗空了。吃完了。" },
+      {
+        id: "p1",
+        en: "Yuan stands by the stove. The pot is hot. Little bubbles. Steam kisses his face. “Noodles soon,” he says.",
+        zh: "小元站在炉子边。锅是热的。小小的泡泡。蒸汽亲亲他的脸。他说：「面快好了。」",
+      },
+      {
+        id: "p2",
+        en: "Long noodles slip into the pot. Plop. The water dances. It smells like warm kitchen. Yuan watches, hungry.",
+        zh: "长长的面条滑进锅里。扑通。水在跳舞。厨房里香香暖暖的。小元看着，肚子咕噜叫。",
+      },
+      {
+        id: "p3",
+        en: "Slurp! Yuan eats noodles. Hot. Soft. Yum. “Careful,” he whispers, because steam is still coming up.",
+        zh: "嘶溜！小元吃面。热热的，软软的，好好吃。他还小声说「小心」，因为还有蒸汽。",
+      },
+      {
+        id: "p4",
+        en: "The bowl is empty. A little soup left. Yuan pats his tummy. “All done. Thank you, noodles.”",
+        zh: "碗空了。只剩一点点汤。小元拍拍肚子。「吃完了。谢谢面条。」",
+      },
     ],
     seq: ["p1", "p3", "p4"],
     belongOn: ["p2", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "What do we eat?",
-        promptZh: "我们吃什么？",
+        promptEn: "The kitchen smells warm. What does Yuan eat?",
+        promptZh: "厨房香香暖暖的。小元吃什么？",
         correct: { book: "noodles", file: "p3" },
         foils: [{ book: "ball", file: "topic" }, { book: "hat", file: "topic" }, { kind: "car" }],
       },
       {
         skill: "sequence",
-        promptEn: "What happened last?",
-        promptZh: "最后发生了什么？",
+        promptEn: "Yuan pats his tummy. What happened last?",
+        promptZh: "小元拍拍肚子。最后发生了什么？",
         correct: { book: "noodles", file: "p4" },
         foils: [
           { book: "noodles", file: "p1" },
@@ -384,25 +512,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: where is Grandma?",
     parentCarZh: "车等到这本书讲完。现在：奶奶在哪里？",
     pages: [
-      { id: "p1", en: "We go to Grandma.", zh: "我们去奶奶家。" },
-      { id: "p2", en: "Grandma says hello.", zh: "奶奶说你好。" },
-      { id: "p3", en: "Grandma tells a story.", zh: "奶奶讲故事。" },
-      { id: "p4", en: "Grandma gives a hug.", zh: "奶奶抱抱。" },
+      {
+        id: "p1",
+        en: "Lin walks to Grandma’s house. Flowers by the door. Her heart goes a little fast. “Grandma is inside.”",
+        zh: "小林走到奶奶家。门边有花。心跳得有一点点快。她想：「奶奶在里面。」",
+      },
+      {
+        id: "p2",
+        en: "The door opens. Grandma’s glasses shine. “Hello, my girl!” Lin smells soap and kitchen. She smiles big.",
+        zh: "门开了。奶奶的眼镜亮亮的。「你好啊，我的小姑娘！」小林闻到肥皂味，还有厨房的味道。她笑得好大。",
+      },
+      {
+        id: "p3",
+        en: "Grandma tells a story. Soft voice. Lin leans in, because she wants every word. The lamp is warm.",
+        zh: "奶奶讲故事。声音轻轻的。小林凑近，因为每一句都想听。灯暖暖的。",
+      },
+      {
+        id: "p4",
+        en: "Grandma’s arms wrap around Lin. The hug is slow and tight. Lin feels safe. “I love you, Grandma.”",
+        zh: "奶奶的手臂圈住小林。抱抱又慢又紧。小林觉得好安心。「我爱你，奶奶。」",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p2", "p3", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "Who opens the door?",
-        promptZh: "谁开门说你好？",
+        promptEn: "Lin smells soap and kitchen. Who opens the door and says hello?",
+        promptZh: "小林闻到肥皂味和厨房味。谁开门说你好？",
         correct: { book: "grandma", file: "p2" },
         foils: [{ book: "hat", file: "p1" }, { book: "help", file: "p4" }, { kind: "car" }],
       },
       {
         skill: "inference",
-        promptEn: "How does the child feel in the hug?",
-        promptZh: "被抱着的时候，小朋友心里怎么样？",
+        promptEn: "The hug is slow and tight. How does Lin feel?",
+        promptZh: "抱抱又慢又紧。小林心里怎么样？",
         correct: { book: "grandma", file: "p4" },
         foils: [
           { book: "hat", file: "p2" },
@@ -430,25 +574,41 @@ const STORY_BOOKS = [
     parentCarEn: "Cars after this book. Right now: who is carrying a bag?",
     parentCarZh: "车等到这本书讲完。现在：谁在拿袋子？",
     pages: [
-      { id: "p1", en: "The bag is heavy.", zh: "袋子好重。" },
-      { id: "p2", en: "I take one bag.", zh: "我拿一个袋子。" },
-      { id: "p3", en: "We walk home.", zh: "我们走回家。" },
-      { id: "p4", en: "Mom says thank you.", zh: "妈妈说谢谢。" },
+      {
+        id: "p1",
+        en: "Mom’s bags are heavy. Her arms look tired. Ping watches. “Too heavy,” he thinks. He wants to help.",
+        zh: "妈妈的袋子好重。手臂看起来好累。小平看着，心想：「太重了。」他想帮忙。",
+      },
+      {
+        id: "p2",
+        en: "Ping takes one bag. It bumps his knees. He holds on, because Mom still has the other. “I can help.”",
+        zh: "小平拿起一个袋子。袋子碰到膝盖。他还是抓紧，因为妈妈还拿着另一个。「我会帮忙。」",
+      },
+      {
+        id: "p3",
+        en: "They walk home together. Step, step. The bags rustle. Ping feels proud, even when his hands get warm.",
+        zh: "他们一起走回家。踏，踏。袋子沙沙响。小平手里发热，心里却很得意。",
+      },
+      {
+        id: "p4",
+        en: "Bags down. Mom kneels. “Thank you, Ping.” Her voice is soft. Ping’s chest feels big and happy.",
+        zh: "袋子放下。妈妈蹲下来。「谢谢你，小平。」声音轻轻的。小平心里胀胀的，好开心。",
+      },
     ],
     seq: ["p1", "p2", "p4"],
     belongOn: ["p1", "p2", "p4"],
     questions: [
       {
         skill: "detail",
-        promptEn: "What does the child carry?",
-        promptZh: "小朋友拿什么？",
+        promptEn: "The bag bumps Ping’s knees. What does he carry?",
+        promptZh: "袋子碰到小平的膝盖。他拿什么？",
         correct: { book: "help", file: "p2" },
         foils: [{ book: "ball", file: "topic" }, { book: "teddy", file: "topic" }, { kind: "car" }],
       },
       {
         skill: "inference",
-        promptEn: "How does Mom feel at the end?",
-        promptZh: "最后妈妈心里怎么样？",
+        promptEn: "Mom says thank you in a soft voice. How does she feel?",
+        promptZh: "妈妈轻轻说谢谢。她心里怎么样？",
         correct: { book: "help", file: "p4" },
         foils: [
           { book: "help", file: "p1" },
