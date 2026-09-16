@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-29";
+const PHOTO_V = "parent-30";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -4053,10 +4053,10 @@ function themePack() {
       brandEn: "故事书",
       brandZh: "故事书",
       heroH: "一次听一个故事。",
-      heroP: "一起坐下来。听完这一本。跑题了也先接住，再问回这个故事。",
+      heroP: "一起坐下来。听完这一本。他说别的，先接住，再拉回来。",
       starsLabel: "这台设备上的故事星星",
       parentNote:
-        "老师说他容易跑题。黄条一直在。先接住他的话，再问回主题。他说恐龙：恐龙呀。那恐龙想戴小黄帽吗？他说车：车也来了。那小车要帮小明找帽子吗？不要说「车待会再讲」。哭了就停。",
+        "老师说他容易跑题。黄条一直在。他说恐龙之类：先重复他的话，再问回这个故事。不要挡「车待会再讲」。哭了就停。",
       boxes: [],
       titles: { story: "故事书" },
     };
@@ -4284,7 +4284,7 @@ function belongFoilItem(book) {
       id: "foil",
       on: false,
       art: sbRefArt(foil),
-      bridgeZh: foil.bridgeZh || book.parentCarZh,
+      bridgeZh: foil.bridgeZh || book.parentStayZh,
     },
   ];
 }
@@ -4292,7 +4292,7 @@ function belongFoilItem(book) {
 function renderGrownupScript(book, bridgeZh) {
   const zh = bridgeZh || book.parentStayZh;
   return `<p class="grownup-script">${escapeHtml(zh)}</p>
-    <p class="join-hint">他插进来的话，变成这个故事里的客人。不要说「车待会再讲」。</p>`;
+    <p class="join-hint">他跑题时：先重复他的话，再问回这个故事。</p>`;
 }
 
 function startBook(id) {
@@ -4399,8 +4399,8 @@ function renderBookBelong() {
       got
         ? `<div class="play-actions">${compactYesZh("book-sequence", "然后", "对，这些图还在这个故事里。", "这个故事还是这个故事。")}</div>`
         : round.showJoinNudge
-          ? `<p class="parent-note">${escapeHtml(round.bridgeZh || book.parentCarZh)}</p>`
-          : `<p class="parent-note">跑题了就接住，再问回${escapeHtml(book.topicZh)}。他说车：${escapeHtml(book.parentCarZh)}</p>`
+          ? `<p class="parent-note">${escapeHtml(round.bridgeZh || book.parentStayZh)}</p>`
+          : ""
     }`;
   return `${topbar("理解")}
     ${playLayout(look, answers, "tap")}`;
@@ -4470,9 +4470,10 @@ function renderBookAsk() {
   if (!round.choices) round.choices = bookQuestionChoices();
   const last = round.qIndex >= book.questions.length - 1;
   const picked = (round.choices || []).find((c) => c.id === round.picked);
-  const wrongBridge = picked && !picked.ok ? picked.bridgeZh || book.parentCarZh : "";
+  const wrongBridge = picked && !picked.ok ? picked.bridgeZh || book.parentStayZh : "";
+  const joinLabel = q.joinPractice ? "提问 · 接话练习" : `提问 · ${round.qIndex + 1}/3`;
   const look = `${renderTopicAnchor(book)}
-      <p class="look-kicker">提问 · ${round.qIndex + 1}/3</p>
+      <p class="look-kicker">${joinLabel}</p>
       <h2>${escapeHtml(q.promptZh)}</h2>
       ${zhHearButton(q.promptZh)}
       ${renderGrownupScript(book, wrongBridge)}
@@ -5534,7 +5535,7 @@ app.addEventListener("click", (e) => {
     if (!item) return;
     if (!item.on) {
       round.showJoinNudge = true;
-      round.bridgeZh = item.bridgeZh || round.book.parentCarZh;
+      round.bridgeZh = item.bridgeZh || round.book.parentStayZh;
       celebrate("wrong");
       render();
       return;

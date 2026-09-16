@@ -12,7 +12,6 @@ const STORY_BOOKS = [
     topicZh: "小黄帽",
     parentStayEn: "Catch what he said, then ask back to the hat.",
     parentStayZh: "先接住他的话，再问回帽子。他说恐龙：恐龙呀。那恐龙想戴小黄帽吗？帽子在哪里？",
-    parentCarZh: "车也来了。那小车要帮小明找帽子吗？帽子在哪里？",
     belongFoil: {
       book: "duck",
       file: "p1",
@@ -87,7 +86,6 @@ const STORY_BOOKS = [
     topicZh: "下雨",
     parentStayEn: "Catch what he said, then ask back to the rain.",
     parentStayZh: "先接住他的话，再问回下雨。他说恐龙：恐龙呀。那恐龙要不要撑伞呀？伞呢？",
-    parentCarZh: "车也来了。那小车要不要打伞呀？伞呢？撑开了没有？",
     belongFoil: {
       book: "duck",
       file: "p1",
@@ -162,7 +160,6 @@ const STORY_BOOKS = [
     topicZh: "小鸭子",
     parentStayEn: "Catch what he said, then ask back to the duck.",
     parentStayZh: "先接住他的话，再问回小鸭子。他说恐龙：恐龙呀。那恐龙也来帮忙了吗？小鸭子在干嘛呢？",
-    parentCarZh: "车也来了。那小车要帮小鸭子送树枝吗？小鸭子在干嘛呢？",
     belongFoil: {
       book: "hat",
       file: "p1",
@@ -237,7 +234,6 @@ const STORY_BOOKS = [
     topicZh: "红色秋千",
     parentStayEn: "Catch what he said, then ask back to the swing.",
     parentStayZh: "先接住他的话，再问回秋千。他说恐龙：恐龙呀。那恐龙想荡秋千吗？谁在秋千上呀？",
-    parentCarZh: "车也来了。那小车想荡秋千吗？谁在秋千上呀？",
     belongFoil: {
       book: "ball",
       file: "p1",
@@ -312,7 +308,6 @@ const STORY_BOOKS = [
     topicZh: "红皮球",
     parentStayEn: "Catch what he said, then ask back to the ball.",
     parentStayZh: "先接住他的话，再问回皮球。他说恐龙：恐龙呀。那恐龙想玩红皮球吗？谁在玩那个红皮球？",
-    parentCarZh: "车也来了。那小车想玩红皮球吗？谁在玩那个红皮球？",
     belongFoil: {
       book: "teddy",
       file: "p2",
@@ -387,7 +382,6 @@ const STORY_BOOKS = [
     topicZh: "小熊",
     parentStayEn: "Catch what he said, then ask back to teddy.",
     parentStayZh: "先接住他的话，再问回小熊。他说恐龙：恐龙呀。那恐龙也困了吗？小熊在哪儿呢？",
-    parentCarZh: "车也来了。那小车也来睡觉了吗？小熊在哪儿呢？",
     belongFoil: {
       book: "duck",
       file: "p1",
@@ -462,7 +456,6 @@ const STORY_BOOKS = [
     topicZh: "小巴士",
     parentStayEn: "Catch what he said, then ask back to the yellow bus.",
     parentStayZh: "先接住他的话，再问回小巴士。他说恐龙：恐龙呀。那恐龙也要坐黄色小巴士吗？黄色小巴士呢？",
-    parentCarZh: "车也来了。那小车要跟黄色小巴士一起开吗？黄色小巴士呢？",
     belongFoil: {
       book: "grandma",
       file: "p1",
@@ -537,7 +530,6 @@ const STORY_BOOKS = [
     topicZh: "面条",
     parentStayEn: "Catch what he said, then ask back to the noodles.",
     parentStayZh: "先接住他的话，再问回面条。他说恐龙：恐龙呀。那恐龙想吃什么面？碗在哪儿？",
-    parentCarZh: "车也来了。那小车也来吃面了吗？碗在哪儿？面吃完了没？",
     belongFoil: {
       book: "duck",
       file: "p1",
@@ -612,7 +604,6 @@ const STORY_BOOKS = [
     topicZh: "奶奶",
     parentStayEn: "Catch what he said, then ask back to Grandma.",
     parentStayZh: "先接住他的话，再问回奶奶。他说恐龙：恐龙呀。那恐龙也来找奶奶了吗？奶奶在哪儿呀？",
-    parentCarZh: "车也来了。那小车也来奶奶家了吗？奶奶在哪儿呀？",
     belongFoil: {
       book: "duck",
       file: "p1",
@@ -687,7 +678,6 @@ const STORY_BOOKS = [
     topicZh: "帮忙",
     parentStayEn: "Catch what he said, then ask back to helping.",
     parentStayZh: "先接住他的话，再问回帮忙。他说恐龙：恐龙呀。那恐龙也来帮忙拿袋子吗？谁在拿袋子呀？",
-    parentCarZh: "车也来了。那小车要帮妈妈拿袋子吗？谁在拿袋子呀？",
     belongFoil: {
       book: "teddy",
       file: "p2",
