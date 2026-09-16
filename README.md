@@ -24,7 +24,7 @@ Preschool teacher: he starts a story, then goes off-topic. The books are short (
 2. **理解 Understand** — “Does this belong in THIS story?” (on-topic pictures vs a tempting car) then First / Then / Last.
 3. **提问 Comprehension** — 3 picture questions: who/what/where, first/last, and “which picture is still our story?”
 
-Parent script on screen: “Wait. This story is about ___. First… then…” If he talks about cars: “Cars after this book. Right now: where is the hat?” Never shame. Stop if tears. At 3.5 this is **listen + pictures**, not decoding print.
+Parent script on screen (中文, oral): 「等一下哦，我们先把帽子的事说完。车待会再讲。」Never shame. Stop if tears. At 3.5 this is **listen + pictures**, not decoding print.
 
 ## Live URL — Mac no longer required
 
@@ -63,7 +63,7 @@ After a deploy, Safari / Home Screen may still show the old page.
 
 **Voice:** the Grown-up **声音** dropdown lists every voice Safari’s Web Speech API exposes (`name · lang`). iPad **Settings → Spoken Content** does **not** give premium/child voices to websites. Safari pages usually only get Ting-Ting / Mei-Jia; Yue (普通话小孩音) in Settings may never appear here.
 
-**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-26` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
+**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-27` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
 
 A real App Store / `.ipa` app would need Apple signing and TestFlight later.
 
@@ -98,7 +98,7 @@ Grown-up / 家长: tap twice (toast: 这是给大人的，再按一次), then th
 ## How to use (5–8 minutes)
 
 1. Let him pick **Garage** if he wants cars. Use **过家家** for house stories. Use **故事书** when you want one short book and practice staying on the topic.
-2. In Story Time: sit together. Let the story read. Keep pointing at the yellow topic chip. If he says “car,” smile: “Cars after this book.”
+2. In Story Time: sit together. Let the story read. Keep pointing at the yellow topic chip. If he says “car,” smile: 「车待会再讲。」
 3. In Garage / 过家家, open **Tell the Story** first — that’s still the home-plan priority for sequencing.
 4. Tap English / 中文 so he hears both.
 5. One more play if he wants, then back to real cars or real bowls.

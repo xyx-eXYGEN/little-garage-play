@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-26";
+const PHOTO_V = "parent-27";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -4054,10 +4054,10 @@ function themePack() {
       brandEn: "故事书",
       brandZh: "故事书",
       heroH: "一次听一个故事。",
-      heroP: "一起坐下来。先听这一本。车子等这本书讲完。",
+      heroP: "一起坐下来。听完这一本。车待会再讲。",
       starsLabel: "这台设备上的故事星星",
       parentNote:
-        "老师提醒：他容易说到别的地方。黄条一直留着，好让这个故事还是这个故事。如果他讲车子：「车等到这本书讲完。」哭了就停。",
+        "老师说他容易跑题。黄条一直在，提醒我们还在讲这一本。他说车：等一下哦，车待会再讲。哭了就停。",
       boxes: [],
       titles: { story: "故事书" },
     };
@@ -4322,7 +4322,7 @@ function renderStoryShelf() {
   return `${topbar("故事书")}
     <section class="hero">
       <h1>选一本书</h1>
-      <p>一起坐下来。听完这一本。车子等这本书讲完。</p>
+      <p>一起坐下来。听完这一本。车待会再讲。</p>
     </section>
     <div class="book-shelf">
       ${STORY_BOOKS.map(
@@ -4366,10 +4366,10 @@ function renderBookBelong() {
   const book = round.book;
   const needed = book.belongOn;
   const got = needed.every((id) => round.belongPicked.includes(id));
-  const promptZh = `我们在说${book.topicZh}。哪一张还是${book.topicZh}的故事？`;
+  const promptZh = `我们在讲${book.topicZh}。哪张还是这个故事？`;
   const look = `${renderTopicAnchor(book)}
       <h2>这张图还在这个故事里吗？</h2>
-      <p>我们在说${escapeHtml(book.topicZh)}。点还是这个故事的图。车子先放一边。</p>
+      <p>我们在讲${escapeHtml(book.topicZh)}。点还是这个故事的图。车子先放一边哦。</p>
       ${zhHearButton(promptZh)}
       ${renderGrownupScript(book, round.showCarNudge)}`;
   const answers = `<div class="answer-row belong-row">
@@ -4384,7 +4384,7 @@ function renderBookBelong() {
     ${
       got
         ? `<div class="play-actions">${compactYesZh("book-sequence", "然后", "对，这些图还在这个故事里。", "这个故事还是这个故事。")}</div>`
-        : `<p class="parent-note">家长等一等。如果他说「车」：「车等到这本书讲完。现在：${escapeHtml(book.topicZh)}。」</p>`
+        : `<p class="parent-note">他说车的话：${escapeHtml(book.parentStayZh)}</p>`
     }`;
   return `${topbar("理解")}
     ${playLayout(look, answers, "tap")}`;
@@ -4399,7 +4399,7 @@ function renderBookSequence() {
   const slotsHtml = renderSequenceSlots(story, labels);
   const look = `${renderTopicAnchor(book)}
       <h2>这个故事里发生了什么？</h2>
-      <p>排出先、然后、最后。家长等一等。先……然后……最后……</p>
+      <p>哪张在前面？哪张在后面？我们还在讲这个故事。</p>
       ${zhHearButton("先发生了什么？")}
       ${renderGrownupScript(book, round.showCarNudge)}`;
   if (done && correct) {
@@ -4462,7 +4462,7 @@ function renderBookAsk() {
       : `<div class="play-actions"><button class="big" type="button" data-action="book-next-q">下一题</button></div>`;
   } else if (picked && !picked.ok) {
     extra = `<div class="play-actions retry-note"><p>${
-      picked.car ? escapeHtml(book.parentCarZh) : "再看这个故事。换一张图试试。"
+      picked.car ? escapeHtml(book.parentCarZh) : "再看这个故事哦。换一张图试试。"
     }</p></div>`;
   }
   return `${topbar("提问")}
