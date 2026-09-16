@@ -19,9 +19,21 @@ After a world is picked, the familiar four boxes appear in that world’s pictur
 
 **https://xyx-exygen.github.io/little-garage-play/**
 
-This is the always-on public HTTPS page. The Mac can sleep. You do **not** need `localhost:8765` or the Python `http.server`. Phone and iPad share this one URL, on any network (home Wi-Fi, cellular, grandparents’ house).
+This URL **never changes**. It is the always-on public HTTPS page. The Mac can sleep. You do **not** need `localhost:8765` or the Python `http.server`. Phone and iPad share this one URL, on any network (home Wi-Fi, cellular, grandparents’ house).
 
-Public play files: [xyx-eXYGEN/little-garage-play](https://github.com/xyx-eXYGEN/little-garage-play). The parent handbook stays in the private workspace repo. After editing `play-garden/`, copy it into `docs/` **and** update the public `little-garage-play` repo before the live page will change.
+Public play files live in [xyx-eXYGEN/little-garage-play](https://github.com/xyx-eXYGEN/little-garage-play) (GitHub Pages from the **repo root**, not Actions). The parent handbook stays in this private workspace.
+
+### Refresh the live page after local edits
+
+Edit files in `play-garden/`, then from the workspace root:
+
+```bash
+./scripts/deploy-little-garage.sh
+```
+
+That copies `play-garden/` into a clone of `little-garage-play`, commits, and `git push origin main`. Pages updates at the **same** URL. The script bumps the `parent-N` cache-bust query in `index.html` / `app.js` when the game files changed, so iPads are less likely to keep old JS. Direct push is the path — do not wait on GitHub Actions.
+
+Or push the same files to `little-garage-play` yourself. Either way, the kid’s bookmark stays `https://xyx-exygen.github.io/little-garage-play/`.
 
 ### Open on iPad / iPhone (Safari, Add to Home Screen)
 
@@ -34,7 +46,9 @@ This is a home-screen web app, not an App Store app.
 5. Name it **Little Garage** or **小车库**, then tap Add.
 6. Open it from the Home Screen — it should be full screen, like an app.
 
-If an old Home Screen icon still points at `localhost:8765` or a LAN IP, **delete that icon** and add this HTTPS URL instead. After an update, pull to refresh in Safari (or delete and re-add the icon) so story videos are not stuck on a cached page.
+If an old Home Screen icon still points at `localhost:8765` or a LAN IP, **delete that icon** and add this HTTPS URL instead.
+
+After a deploy, Safari may still show the old page. **Hard-reload** (refresh, or long-press Refresh → reload without cache). If it still looks stale, **delete the Home Screen icon and Add to Home Screen again** so story videos and JS are not stuck on a cached copy.
 
 A real App Store / `.ipa` app would need Apple signing and TestFlight later.
 
