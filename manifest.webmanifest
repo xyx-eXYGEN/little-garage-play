@@ -2,7 +2,7 @@
   "name": "Little Garage / 过家家",
   "short_name": "小车库",
   "description": "Sit-together play: Garage cars or 过家家 house. Parent stays with the child.",
-  "start_url": "./",
+  "start_url": "./?v=parent-23",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

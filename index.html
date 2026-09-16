@@ -13,10 +13,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="format-detection" content="telephone=no" />
     <title>Little Garage · 故事书</title>
+    <!-- little-garage-cache: parent-23 -->
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <link rel="stylesheet" href="styles.css?v=parent-22" />
+    <link rel="stylesheet" href="styles.css?v=parent-23" />
     <style>
       html,
       body {
@@ -36,6 +37,20 @@
   <body>
     <script>
       (function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (reg) {
+              reg.unregister();
+            });
+          });
+        }
+        if (window.caches && caches.keys) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (key) {
+              caches.delete(key);
+            });
+          });
+        }
         function allowScroll(node) {
           return !!(node && node.closest && node.closest(".allow-scroll, .play-scroll"));
         }
@@ -60,7 +75,7 @@
       })();
     </script>
     <div id="app"></div>
-    <script src="storybook-data.js?v=parent-22"></script>
-    <script src="app.js?v=parent-22"></script>
+    <script src="storybook-data.js?v=parent-23"></script>
+    <script src="app.js?v=parent-23"></script>
   </body>
 </html>

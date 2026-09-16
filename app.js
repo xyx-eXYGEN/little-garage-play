@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-22";
+const PHOTO_V = "parent-23";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -786,6 +786,21 @@ function isZhTwVoice(voice) {
   return voiceLangTag(voice).startsWith("zh-tw");
 }
 
+function isYueOrCantoneseVoice(voice) {
+  const raw = String((voice && voice.name) || "");
+  const name = foldVoiceName(raw);
+  const lang = voiceLangTag(voice);
+  return (
+    lang.startsWith("zh-hk") ||
+    lang.startsWith("zh-yue") ||
+    lang.startsWith("yue") ||
+    name.includes("cantonese") ||
+    /\byue\b/.test(name) ||
+    raw.includes("粤") ||
+    raw.includes("粵")
+  );
+}
+
 function nameHasHint(name, hints) {
   return hints.some((hint) => name.includes(hint));
 }
@@ -808,8 +823,8 @@ function scoreTaiwanVoice(voice) {
   const lang = voiceLangTag(voice);
   let score = 0;
 
-  if (isZhTwVoice(voice)) score += 80;
-  else if (lang.startsWith("zh-hk") || name.includes("cantonese")) score -= 30;
+  if (isYueOrCantoneseVoice(voice)) score -= 400;
+  else if (isZhTwVoice(voice)) score += 80;
   else if (lang.startsWith("zh")) score += 8;
 
   if (isMeijiaVoice(voice)) score += 160;
@@ -827,7 +842,7 @@ function scoreTaiwanVoice(voice) {
 }
 
 function pickTaiwanFemaleVoice(voices) {
-  const list = voices || [];
+  const list = (voices || []).filter((voice) => !isYueOrCantoneseVoice(voice));
   const tw = list.filter(isZhTwVoice).slice().sort((a, b) => scoreTaiwanVoice(b) - scoreTaiwanVoice(a));
   const twFemale = tw.filter((voice) => !isLikelyMaleVoice(voice));
   if (twFemale.length) return twFemale[0];
@@ -5220,7 +5235,7 @@ function renderSettings() {
       <label>Tap-to-hear speech
         <input type="checkbox" data-set="speech" ${s.speech ? "checked" : ""}/>
       </label>
-      <p class="cogat-hint">中文：台湾腔 · 美佳（zh-TW）。故事书一次读整页，比较连贯。</p>
+      <p class="cogat-hint">中文：台湾腔 · 美佳（zh-TW）。不要选 Yue（粤语／Cantonese）。故事书一次读整页，比较连贯。</p>
       <label>Gentle break reminder
         <select data-set="sessionMin">
           ${[5, 8, 10, 15]
