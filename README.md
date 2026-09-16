@@ -25,7 +25,7 @@ Public play files live in [xyx-eXYGEN/little-garage-play](https://github.com/xyx
 
 ### Refresh the live page after local edits
 
-Edit files in `play-garden/`, then from the workspace root:
+Edit the game in the private handbook repo (`play-garden/`), then from **that** repo root:
 
 ```bash
 ./scripts/deploy-little-garage.sh
@@ -33,7 +33,7 @@ Edit files in `play-garden/`, then from the workspace root:
 
 That copies `play-garden/` into a clone of `little-garage-play`, commits, and `git push origin main`. Pages updates at the **same** URL. The script bumps the `parent-N` cache-bust query in `index.html` / `app.js` when the game files changed, so iPads are less likely to keep old JS. Direct push is the path — do not wait on GitHub Actions.
 
-Or push the same files to `little-garage-play` yourself. Either way, the kid’s bookmark stays `https://xyx-exygen.github.io/little-garage-play/`.
+Or push the same files to `little-garage-play` yourself. Either way, the kid’s bookmark stays `https://xyx-exygen.github.io/little-garage-play/`. The deploy script is **not** in the public Pages repo.
 
 ### Open on iPad / iPhone (Safari, Add to Home Screen)
 
