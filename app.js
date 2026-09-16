@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-27";
+const PHOTO_V = "parent-29";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -465,7 +465,6 @@ function sbImg(bookId, file, alt, extraClass) {
 
 function sbRefArt(ref) {
   if (!ref) return "";
-  if (ref.kind === "car") return photo("car-red", "red car");
   return sbImg(ref.book, ref.file, "", "scene");
 }
 
@@ -4054,10 +4053,10 @@ function themePack() {
       brandEn: "故事书",
       brandZh: "故事书",
       heroH: "一次听一个故事。",
-      heroP: "一起坐下来。听完这一本。车待会再讲。",
+      heroP: "一起坐下来。听完这一本。跑题了也先接住，再问回这个故事。",
       starsLabel: "这台设备上的故事星星",
       parentNote:
-        "老师说他容易跑题。黄条一直在，提醒我们还在讲这一本。他说车：等一下哦，车待会再讲。哭了就停。",
+        "老师说他容易跑题。黄条一直在。先接住他的话，再问回主题。他说恐龙：恐龙呀。那恐龙想戴小黄帽吗？他说车：车也来了。那小车要帮小明找帽子吗？不要说「车待会再讲」。哭了就停。",
       boxes: [],
       titles: { story: "故事书" },
     };
@@ -4277,9 +4276,23 @@ function renderTopicAnchor(book) {
   </div>`;
 }
 
-function renderGrownupScript(book, carNudge) {
-  const zh = carNudge ? book.parentCarZh : book.parentStayZh;
-  return `<p class="grownup-script">${escapeHtml(zh)}</p>`;
+function belongFoilItem(book) {
+  const foil = book.belongFoil || book.belongOff;
+  if (!foil) return [];
+  return [
+    {
+      id: "foil",
+      on: false,
+      art: sbRefArt(foil),
+      bridgeZh: foil.bridgeZh || book.parentCarZh,
+    },
+  ];
+}
+
+function renderGrownupScript(book, bridgeZh) {
+  const zh = bridgeZh || book.parentStayZh;
+  return `<p class="grownup-script">${escapeHtml(zh)}</p>
+    <p class="join-hint">他插进来的话，变成这个故事里的客人。不要说「车待会再讲」。</p>`;
 }
 
 function startBook(id) {
@@ -4298,13 +4311,14 @@ function startBook(id) {
     belongOrder: shuffle(
       book.belongOn
         .map((file) => ({ id: file, on: true, art: sbImg(book.id, file, file) }))
-        .concat([{ id: "car", on: false, art: photo("car-red", "red car") }])
+        .concat(belongFoilItem(book))
     ),
     slots: Array(book.seq.length).fill(null),
     selectedBeat: null,
     qIndex: 0,
     picked: null,
-    showCarNudge: false,
+    showJoinNudge: false,
+    bridgeZh: "",
   };
   render();
 }
@@ -4322,7 +4336,7 @@ function renderStoryShelf() {
   return `${topbar("故事书")}
     <section class="hero">
       <h1>选一本书</h1>
-      <p>一起坐下来。听完这一本。车待会再讲。</p>
+      <p>一起坐下来。听完这一本。跑题了也先接住，再问回这个故事。</p>
     </section>
     <div class="book-shelf">
       ${STORY_BOOKS.map(
@@ -4346,7 +4360,7 @@ function renderBookRead() {
       <div class="book-page-art">${sbImg(book.id, page.id, page.zh, "scene book-scene")}</div>
       <h2 class="book-read-zh">${escapeHtml(page.zh)}</h2>
       ${zhHearButton(fluentZhText(page.zh))}
-      ${renderGrownupScript(book, round.showCarNudge)}`;
+      ${renderGrownupScript(book)}`;
   const nav = `<div class="book-nav">
       <button class="big ghost" type="button" data-action="book-prev" ${round.page === 0 ? "disabled" : ""}>上一页</button>
       ${
@@ -4369,9 +4383,9 @@ function renderBookBelong() {
   const promptZh = `我们在讲${book.topicZh}。哪张还是这个故事？`;
   const look = `${renderTopicAnchor(book)}
       <h2>这张图还在这个故事里吗？</h2>
-      <p>我们在讲${escapeHtml(book.topicZh)}。点还是这个故事的图。车子先放一边哦。</p>
+      <p>我们在讲${escapeHtml(book.topicZh)}。点还是这个故事的图。</p>
       ${zhHearButton(promptZh)}
-      ${renderGrownupScript(book, round.showCarNudge)}`;
+      ${renderGrownupScript(book, round.showJoinNudge ? round.bridgeZh : "")}`;
   const answers = `<div class="answer-row belong-row">
       ${round.belongOrder
         .map((item) => {
@@ -4384,7 +4398,9 @@ function renderBookBelong() {
     ${
       got
         ? `<div class="play-actions">${compactYesZh("book-sequence", "然后", "对，这些图还在这个故事里。", "这个故事还是这个故事。")}</div>`
-        : `<p class="parent-note">他说车的话：${escapeHtml(book.parentStayZh)}</p>`
+        : round.showJoinNudge
+          ? `<p class="parent-note">${escapeHtml(round.bridgeZh || book.parentCarZh)}</p>`
+          : `<p class="parent-note">跑题了就接住，再问回${escapeHtml(book.topicZh)}。他说车：${escapeHtml(book.parentCarZh)}</p>`
     }`;
   return `${topbar("理解")}
     ${playLayout(look, answers, "tap")}`;
@@ -4401,7 +4417,7 @@ function renderBookSequence() {
       <h2>这个故事里发生了什么？</h2>
       <p>哪张在前面？哪张在后面？我们还在讲这个故事。</p>
       ${zhHearButton("先发生了什么？")}
-      ${renderGrownupScript(book, round.showCarNudge)}`;
+      ${renderGrownupScript(book)}`;
   if (done && correct) {
     return `${topbar("理解")}
       ${playLayout(
@@ -4438,7 +4454,12 @@ function bookQuestionChoices() {
   const q = round.book.questions[round.qIndex];
   const opts = shuffle([
     { id: "ok", ok: true, art: sbRefArt(q.correct) },
-    ...q.foils.map((foil, i) => ({ id: `no-${i}`, ok: false, art: sbRefArt(foil), car: foil.kind === "car" })),
+    ...q.foils.map((foil, i) => ({
+      id: `no-${i}`,
+      ok: false,
+      art: sbRefArt(foil),
+      bridgeZh: foil.bridgeZh,
+    })),
   ]);
   return opts;
 }
@@ -4449,11 +4470,12 @@ function renderBookAsk() {
   if (!round.choices) round.choices = bookQuestionChoices();
   const last = round.qIndex >= book.questions.length - 1;
   const picked = (round.choices || []).find((c) => c.id === round.picked);
+  const wrongBridge = picked && !picked.ok ? picked.bridgeZh || book.parentCarZh : "";
   const look = `${renderTopicAnchor(book)}
       <p class="look-kicker">提问 · ${round.qIndex + 1}/3</p>
       <h2>${escapeHtml(q.promptZh)}</h2>
       ${zhHearButton(q.promptZh)}
-      ${renderGrownupScript(book, round.showCarNudge || (picked && !picked.ok && picked.car))}
+      ${renderGrownupScript(book, wrongBridge)}
       <p class="grownup-script">只要看图听——不用认字。</p>`;
   let extra = "";
   if (picked && picked.ok) {
@@ -4461,9 +4483,7 @@ function renderBookAsk() {
       ? compactYesZh("another-book", "再看一本", "你一直跟着这个故事。")
       : `<div class="play-actions"><button class="big" type="button" data-action="book-next-q">下一题</button></div>`;
   } else if (picked && !picked.ok) {
-    extra = `<div class="play-actions retry-note"><p>${
-      picked.car ? escapeHtml(book.parentCarZh) : "再看这个故事哦。换一张图试试。"
-    }</p></div>`;
+    extra = `<div class="play-actions retry-note"><p>${escapeHtml(wrongBridge)}</p></div>`;
   }
   return `${topbar("提问")}
     ${playLayout(look, `${renderChoices()}${extra}`, "tap")}`;
@@ -5371,7 +5391,7 @@ function renderSettings() {
         <input type="checkbox" data-play="box" ${s.plays.box !== false ? "checked" : ""}/>
       </label>
       <p class="cogat-hint">Three spoken hints, then four pictures. The box opens when the picture matches. No reading required.</p>
-      <p class="cogat-hint">故事书（第三扇门）：全程中文。先听故事、跟着这一本，再问是谁/什么/哪里、先/后。听和看图，不用认字。车子是干扰项，不是责骂。</p>
+      <p class="cogat-hint">故事书（第三扇门）：全程中文。先听故事、跟着这一本，再问是谁/什么/哪里、先/后。听和看图，不用认字。先接住他的话，再问回主题。他说恐龙：恐龙呀。那恐龙想戴小黄帽吗？不要说「车待会再讲」。</p>
       <p style="margin-top:12px;color:var(--muted);font-size:0.9rem">Stars saved on this device only. No account. CogAT words stay in this grown-up screen only.</p>
       <p class="cogat-hint">Same page on phone and iPad — one address. In Safari: Share (方块加箭头) → Add to Home Screen / 添加到主屏幕. Both devices can do this. Mac stays awake on the same Wi-Fi with the server running. This is a home-screen web app, not an App Store app.</p>
     </div>`;
@@ -5513,13 +5533,14 @@ app.addEventListener("click", (e) => {
     const item = (round.belongOrder || []).find((x) => x.id === id);
     if (!item) return;
     if (!item.on) {
-      round.showCarNudge = true;
+      round.showJoinNudge = true;
+      round.bridgeZh = item.bridgeZh || round.book.parentCarZh;
       celebrate("wrong");
       render();
       return;
     }
     if (!round.belongPicked.includes(id)) round.belongPicked.push(id);
-    round.showCarNudge = false;
+    round.showJoinNudge = false;
     if (round.book.belongOn.every((need) => round.belongPicked.includes(need))) {
       celebrate("correct");
     }
@@ -5609,7 +5630,7 @@ app.addEventListener("click", (e) => {
   if (t.dataset.action === "book-understand") {
     cancelStoryRead();
     round.phase = "belong";
-    round.showCarNudge = false;
+    round.showJoinNudge = false;
     render();
     return;
   }
@@ -5632,7 +5653,7 @@ app.addEventListener("click", (e) => {
     round.qIndex += 1;
     round.picked = null;
     round.choices = null;
-    round.showCarNudge = false;
+    round.showJoinNudge = false;
     render();
     return;
   }
@@ -5693,8 +5714,6 @@ app.addEventListener("click", (e) => {
       }
       celebrate("correct");
     } else {
-      const picked = (round.choices || []).find((c) => c.id === round.picked);
-      if (picked && picked.car) round.showCarNudge = true;
       celebrate("wrong");
     }
     render();

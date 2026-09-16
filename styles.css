@@ -3019,6 +3019,13 @@ svg.where-choice {
   line-height: 1.35;
 }
 
+.join-hint {
+  margin: 6px 0 0;
+  color: #6a5044;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .book-page-art {
   width: 100%;
   margin: 6px 0 8px;
