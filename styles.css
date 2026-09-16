@@ -254,12 +254,16 @@ button {
   gap: 8px;
   margin-bottom: 8px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 40;
+  pointer-events: auto;
 }
 
 .brand {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  pointer-events: none;
 }
 
 .brand strong {
@@ -284,7 +288,39 @@ button {
   font-weight: 600;
   border: 2px solid #c45e32;
   box-shadow: 0 4px 0 var(--shadow);
-  touch-action: none;
+  position: relative;
+  z-index: 41;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.grownup-btn {
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+.grownup-btn.is-armed {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+  background: #c45e32;
+}
+
+.grownup-hint {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: #4a3226;
+  color: #fff8ee;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
 }
 
 .icon-btn:focus-visible,
@@ -929,7 +965,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 20;
+  z-index: 100;
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: none;

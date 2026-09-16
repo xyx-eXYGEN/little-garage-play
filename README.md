@@ -61,9 +61,9 @@ If an old Home Screen icon still points at `localhost:8765` or a LAN IP, **delet
 
 After a deploy, Safari / Home Screen may still show the old page.
 
-**Voice:** the webpage must pick the voice in JavaScript. iPad **Settings → Spoken Content** does **not** automatically change this site. After a hard refresh, hold **Grown-up / 家长**, tap the yellow car, and choose **Yue** in **声音**. Mac may not list Yue; the iPad will.
+**Voice:** the webpage must pick the voice in JavaScript. iPad **Settings → Spoken Content** does **not** automatically change this site. After a hard refresh, tap **Grown-up / 家长** twice (you will see 这是给大人的，再按一次), tap the yellow car, and choose **Yue** in **声音**. Mac may not list Yue; the iPad will.
 
-**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-23` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
+**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-25` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
 
 A real App Store / `.ipa` app would need Apple signing and TestFlight later.
 
@@ -93,7 +93,7 @@ Pictures are stored in `photos/` (close-up objects). **Tell the Story** sequence
 
 On a correct **sequence**, the story video (`story.mp4`) plays in the Look window (muted, tap **Skip · 跳过** if you want). Fireworks already run — no extra photo stack underneath. Other correct answers still celebrate with fireworks for about two seconds (no scary boom, no “WRONG” animation). Games split into a flat **Look / 看一看** card on top and raised answer cards below. Sequence games: drag a picture into First / Then / Last, or tap a picture then tap a slot.
 
-Grown-up button (hold, then a tiny yellow-car question) opens settings: which boxes, bilingual labels, speech, a gentle “maybe a break?” reminder, and a **parent-only** one-line CogAT skill hint. Stars save in this browser only. No account, no internet required after the page is loaded.
+Grown-up / 家长: tap twice (toast: 这是给大人的，再按一次), then the yellow car. That opens settings: which boxes, bilingual labels, the **声音** voice list, a gentle “maybe a break?” reminder, and a **parent-only** one-line CogAT skill hint. Stars save in this browser only. No account, no internet required after the page is loaded.
 
 ## How to use (5–8 minutes)
 

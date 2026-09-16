@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-24";
+const PHOTO_V = "parent-25";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -3974,6 +3974,9 @@ let sessionStarted = 0;
 let awarded = false;
 let round = null;
 let holdTimer = null;
+let grownupArmedUntil = 0;
+let grownupHintTimer = null;
+let grownupTapLockUntil = 0;
 let selectedPiece = null;
 let suppressClickUntil = 0;
 const drag = {
@@ -4047,7 +4050,7 @@ function themePack() {
       heroP: "Same five doors. Kitchen, bowls, bed, and a mystery box. Parent sits with him. Start with Tell the Story — that is the gap. Real play still wins after 5–8 minutes.",
       starsLabel: "House stars on this device",
       parentNote:
-        "Each box shuffles a different house puzzle when you go in. Grown-up: hold Grown-up, then tap the yellow car. The big picture bar is 换主题 — or tap Home 回家 again on this screen.",
+        "Each box shuffles a different house puzzle when you go in. Grown-up: tap 家长 twice, then the yellow car. The big picture bar is 换主题 — or tap Home 回家 again on this screen.",
       boxes: [
         {
           id: "story",
@@ -4110,7 +4113,7 @@ function themePack() {
     heroP: "Same five doors. Fresh puzzles inside, plus a mystery box. Parent sits with him. Start with Tell the Story — that is the gap. Real toy cars still win after 5–8 minutes.",
     starsLabel: "Garage stars on this device",
     parentNote:
-      "Each box shuffles a different car puzzle when you go in. Grown-up: hold the Grown-up button, then tap the yellow car to open settings. The big picture bar is 换主题 — or tap Home 回家 again on this screen. No login. Nothing leaves this phone or iPad.",
+      "Each box shuffles a different car puzzle when you go in. Grown-up: tap 家长 twice, then the yellow car to open settings. The big picture bar is 换主题 — or tap Home 回家 again on this screen. No login. Nothing leaves this phone or iPad.",
     boxes: [
       { id: "story", title: "Tell the Story", sub: "先 / 然后 / 最后 · new puzzles inside", thumb: fireTruckArt() },
       { id: "park", title: "Park the Cars", sub: "More, less, same — close amounts", thumb: pickupArt() },
@@ -4158,10 +4161,11 @@ function topbar(title) {
       : `<button class="icon-btn" type="button" data-go="home">${homeLabel}</button>`;
   const brand = view === "themes" ? "Pick a world" : storyUi ? pack.brandZh : pack.brandEn;
   const sub = view === "themes" ? "Garage · 过家家 · 故事书" : storyUi ? "听故事" : pack.brandZh;
+  const armed = Date.now() < grownupArmedUntil ? " is-armed" : "";
   return `<div class="topbar">
     ${homeBtn}
     <div class="brand"><strong>${title}</strong><span>${brand} · ${sub}</span></div>
-    <button class="icon-btn" type="button" id="grownup">${grownLabel}</button>
+    <button class="icon-btn grownup-btn${armed}" type="button" id="grownup" aria-label="家长设置，请按两次">${grownLabel}</button>
   </div>
   <div class="road-strip"></div>`;
 }
@@ -5462,7 +5466,10 @@ app.addEventListener("click", (e) => {
   );
   if (!t) return;
 
-  if (t.id === "grownup") return;
+  if (t.id === "grownup") {
+    onGrownupTap();
+    return;
+  }
 
   if (t.dataset.theme) {
     overlay = null;
@@ -5759,12 +5766,61 @@ function canSequenceDrag() {
   );
 }
 
+function hideGrownupHint() {
+  const toast = document.getElementById("grownup-hint");
+  if (toast) toast.hidden = true;
+  clearTimeout(grownupHintTimer);
+}
+
+function showGrownupHint(msg) {
+  let toast = document.getElementById("grownup-hint");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "grownup-hint";
+    toast.className = "grownup-hint";
+    toast.setAttribute("role", "status");
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.hidden = false;
+  clearTimeout(grownupHintTimer);
+  grownupHintTimer = setTimeout(() => {
+    toast.hidden = true;
+  }, 2400);
+}
+
+function openGrownupGate() {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  grownupArmedUntil = 0;
+  hideGrownupHint();
+  overlay = "gate";
+  render();
+}
+
+function onGrownupTap() {
+  const now = Date.now();
+  if (now < grownupTapLockUntil) return;
+  grownupTapLockUntil = now + 380;
+  if (overlay === "gate" || view === "settings") return;
+  if (now < grownupArmedUntil) {
+    openGrownupGate();
+    return;
+  }
+  grownupArmedUntil = now + 4500;
+  const btn = document.getElementById("grownup");
+  if (btn) btn.classList.add("is-armed");
+  showGrownupHint("这是给大人的，再按一次");
+}
+
 app.addEventListener("pointerdown", (e) => {
-  if (e.target.closest("#grownup")) {
+  const grown = e.target.closest("#grownup");
+  if (grown) {
+    e.stopPropagation();
+    clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
-      overlay = "gate";
-      render();
-    }, 650);
+      openGrownupGate();
+    }, 800);
   }
   if (!canSequenceDrag() || e.button) return;
   const source = e.target.closest("[data-drag]");
@@ -5807,7 +5863,16 @@ app.addEventListener(
 );
 
 app.addEventListener("pointerup", (e) => {
-  clearTimeout(holdTimer);
+  const grown = e.target.closest && e.target.closest("#grownup");
+  if (grown) {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+    onGrownupTap();
+    suppressClickUntil = Date.now() + 400;
+  } else if (holdTimer) {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  }
   if (!drag.id) return;
   const id = drag.id;
   const moved = drag.moved;
@@ -5822,11 +5887,16 @@ app.addEventListener("pointerup", (e) => {
     render();
   }
 });
-app.addEventListener("pointercancel", () => {
+app.addEventListener("pointercancel", (e) => {
+  const grown = e.target.closest && e.target.closest("#grownup");
   clearTimeout(holdTimer);
+  holdTimer = null;
+  if (grown) {
+    onGrownupTap();
+    suppressClickUntil = Date.now() + 400;
+  }
   clearDrag();
 });
-app.addEventListener("pointerleave", () => clearTimeout(holdTimer));
 
 warmSpeechVoices();
 render();
