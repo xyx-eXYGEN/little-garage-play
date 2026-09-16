@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-31";
+const PHOTO_V = "parent-32";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
