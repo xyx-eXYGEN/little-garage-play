@@ -2993,16 +2993,11 @@ svg.where-choice {
   background: #fff8e8;
 }
 
-.look-card h2.book-read-en {
+.look-card h2.book-read-zh {
   font-size: 1.12rem;
-  line-height: 1.45;
+  line-height: 1.55;
   font-weight: 650;
-  margin: 4px 0 6px;
-}
-
-.look-card p.book-read-zh {
-  font-size: 1.02rem;
-  line-height: 1.45;
+  margin: 4px 0 8px;
   color: var(--ink);
 }
 
