@@ -1,19 +1,30 @@
 # Little Garage — play page for a 3.5-year-old
 
-Car-themed **and** 过家家 (playing house) activities that match the parent handbook in `../ALP-PREP-PLAN.md`. **You sit with him.** The screen scaffolds; it does not replace you. Real magnetic-tile garages still win.
+Car-themed **and** 过家家 (playing house) **and** 故事书 Story Time. Matches the parent handbook in `../ALP-PREP-PLAN.md`. **You sit with him.** The screen scaffolds; it does not replace you. Real magnetic-tile garages still win.
 
-**Design:** two worlds, same four game types. Garage is his hook (cars). 过家家 is for stories (wash → eat → sleep). Phone and iPad share **one URL**.
+**Design:** three worlds. Garage is his hook (cars). 过家家 is everyday house stories. **Story Time is independent** — a shelf of 10 short books that train **staying on one topic** (preschool topic maintenance), plus listen-and-picture comprehension. Phone and iPad share **one URL**.
 
-## Two worlds
+## Three worlds
 
-Open the page → two huge **photo doors** (kid can tap without reading):
+Open the page → three huge **picture doors** (kid can tap without reading):
 
 - **Garage / 小车库** — real fire truck, pickup, sports car, ordinary cars
-- **过家家** — real kitchen, rice, dumplings, bowls, plates, bed
+- **过家家** — kitchen, rice, dumplings, bowls, plates, bed
+- **故事书 / Story Time** — a bookshelf. **Does not** show the four garage games. Shows **10 books**.
 
-After a world is picked, the familiar four boxes appear in that world’s pictures. Last world is remembered on this device.
+After Garage or 过家家 is picked, the familiar boxes appear. Story Time opens a **book shelf**. Last world is remembered on this device.
 
-**Switch worlds:** the big cream **换主题 · Change world** picture bar under the four boxes (shows the other world). Or tap **Home 回家** a second time on the four-box screen. From a game, Home goes to the four boxes first so you are not trapped.
+**Switch worlds:** the big cream **换主题 · Change world** picture bar. Or tap **Home 回家** a second time.
+
+## Story Time (topic maintenance)
+
+Preschool teacher: he starts a story, then goes off-topic. The books are short (one character, one problem, one ending). A **topic chip** stays on every screen (“this story is about the yellow hat”).
+
+1. **读 Read** — auto Hear/听 reads the whole short story (English + 中文, zh-TW slow). 4 illustrated pages, one scene each.
+2. **理解 Understand** — “Does this belong in THIS story?” (on-topic pictures vs a tempting car) then First / Then / Last.
+3. **提问 Comprehension** — 3 picture questions: who/what/where, first/last, and “which picture is still our story?”
+
+Parent script on screen: “Wait. This story is about ___. First… then…” If he talks about cars: “Cars after this book. Right now: where is the hat?” Never shame. Stop if tears. At 3.5 this is **listen + pictures**, not decoding print.
 
 ## Live URL — Mac no longer required
 
@@ -82,10 +93,10 @@ Grown-up button (hold, then a tiny yellow-car question) opens settings: which bo
 
 ## How to use (5–8 minutes)
 
-1. Let him pick **Garage** if he wants cars. Use **过家家** when you want a story with a beginning, middle, and end.
-2. Open **Tell the Story** first — that’s the home-plan priority.
-3. Tap English / 中文 on labels so he hears both.
-4. After a sequence, **you** ask: “What happened first?” Wait. The app shows sentence starters; he talks.
+1. Let him pick **Garage** if he wants cars. Use **过家家** for house stories. Use **故事书** when you want one short book and practice staying on the topic.
+2. In Story Time: sit together. Let the story read. Keep pointing at the yellow topic chip. If he says “car,” smile: “Cars after this book.”
+3. In Garage / 过家家, open **Tell the Story** first — that’s still the home-plan priority for sequencing.
+4. Tap English / 中文 so he hears both.
 5. One more play if he wants, then back to real cars or real bowls.
 
 No timers that punish. A mixed-up picture just means “let’s look again.”

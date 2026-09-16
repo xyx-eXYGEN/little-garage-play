@@ -429,6 +429,10 @@ button {
   min-height: 0;
 }
 
+.theme-doors.doors-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .theme-door {
   display: flex;
   flex-direction: column;
@@ -2895,5 +2899,132 @@ svg.where-choice {
     position: sticky;
     bottom: 0;
     background: #fff4e4;
+  }
+
+  .play-stage .book-page-art img.photo.scene,
+  .play-stage .book-page-art img.photo.book-scene {
+    max-height: min(38vh, 280px);
+    height: auto;
+  }
+
+  .topic-anchor img.photo.topic {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.book-shelf {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(8px, 1.4vh, 14px);
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.book-shelf .book-cover {
+  height: auto;
+  min-height: 0;
+}
+
+.book-shelf .book-cover .thumb img.photo {
+  height: clamp(88px, 16vh, 140px);
+  object-fit: cover;
+}
+
+.topic-anchor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  background: #fff1d8;
+  border: 3px solid #f0c4a0;
+  flex-shrink: 0;
+}
+
+.topic-anchor img.photo.topic {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #fff8ee;
+}
+
+.topic-anchor-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.topic-anchor-copy b {
+  font-size: 1.02rem;
+  line-height: 1.25;
+}
+
+.topic-anchor-copy span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.grownup-script {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #efe6d6;
+  color: #6a5044;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.book-page-art {
+  width: 100%;
+  margin: 6px 0 8px;
+}
+
+.book-page-art img.photo.scene,
+.book-page-art img.photo.book-scene {
+  width: 100%;
+  height: auto;
+  max-height: min(46vh, 380px);
+  object-fit: contain;
+  background: #fff8e8;
+}
+
+.book-nav {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.book-nav .big {
+  flex: 1;
+}
+
+.choice.belong-yes {
+  outline: 4px solid #6aaa78;
+  background: #e7f4ea;
+}
+
+@media (min-width: 768px) {
+  .book-shelf {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .theme-doors.doors-3 .theme-door b {
+    font-size: 1.2rem;
+  }
+
+  .book-page-art img.photo.scene,
+  .book-page-art img.photo.book-scene {
+    max-height: min(48vh, 420px);
+  }
+}
+
+@media (max-width: 767px) {
+  .theme-doors.doors-3 {
+    grid-template-columns: 1fr;
   }
 }

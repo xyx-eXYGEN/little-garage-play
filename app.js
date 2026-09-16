@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-19";
+const PHOTO_V = "parent-20";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -453,6 +453,21 @@ function houseWorldArt() {
   return photo("world-house", "kitchen at home", "world");
 }
 
+function storybookWorldArt() {
+  return photo("world-storybook", "picture books on a shelf", "world");
+}
+
+function sbImg(bookId, file, alt, extraClass) {
+  const cls = extraClass ? `photo ${extraClass}` : "photo scene";
+  return `<img class="${cls}" src="photos/storybook/${bookId}/${file}.jpg?v=${PHOTO_V}" alt="${escapeHtml(alt || "")}" />`;
+}
+
+function sbRefArt(ref) {
+  if (!ref) return "";
+  if (ref.kind === "car") return photo("car-red", "red car");
+  return sbImg(ref.book, ref.file, "", "scene");
+}
+
 function hearIcon() {
   return `<svg class="hear-icon" viewBox="0 0 24 24" aria-hidden="true">
     <path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/>
@@ -674,7 +689,12 @@ function choiceIsCorrect() {
 }
 
 function sequenceIsCorrect() {
-  if (!round || round.kind !== "sequence" || !round.story) return false;
+  if (!round) return false;
+  if (round.kind === "storybook" && round.phase === "sequence") {
+    const order = round.book.seq;
+    return round.slots.every(Boolean) && round.slots.every((id, i) => id === order[i]);
+  }
+  if (round.kind !== "sequence" || !round.story) return false;
   const story = round.story;
   return round.slots.every(Boolean) && round.slots.every((id, i) => id === story.beats[i].id);
 }
@@ -851,7 +871,7 @@ function unlockSpeechForGesture() {
   }
 }
 
-function speakUtterance(text, lang, voices) {
+function speakUtterance(text, lang, voices, opts) {
   const u = new SpeechSynthesisUtterance(text);
   if (lang === "zh") {
     const voice = pickTaiwanFemaleVoice(voices);
@@ -864,8 +884,66 @@ function speakUtterance(text, lang, voices) {
     u.rate = EN_RATE;
     u.pitch = 1;
   }
-  speechSynthesis.cancel();
+  if (opts && typeof opts.onend === "function") {
+    u.onend = opts.onend;
+    u.onerror = opts.onend;
+  }
+  if (!opts || opts.cancel !== false) speechSynthesis.cancel();
   speechSynthesis.speak(u);
+}
+
+let storyReadToken = 0;
+
+function cancelStoryRead() {
+  storyReadToken += 1;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+function speakThen(text, lang, token) {
+  return new Promise((resolve) => {
+    if (token !== storyReadToken) {
+      resolve();
+      return;
+    }
+    const settings = loadState();
+    if (!settings.speech || !window.speechSynthesis) {
+      resolve();
+      return;
+    }
+    const finish = () => resolve();
+    const voices = collectSpeechVoices();
+    if (lang !== "zh" || voices.length) {
+      speakUtterance(text, lang, voices, { cancel: false, onend: finish });
+      return;
+    }
+    unlockSpeechForGesture();
+    whenSpeechVoicesReady().then((readyVoices) => {
+      if (token !== storyReadToken) {
+        resolve();
+        return;
+      }
+      speakUtterance(text, lang, readyVoices, { cancel: false, onend: finish });
+    });
+  });
+}
+
+async function readStoryBookAloud(whole) {
+  const token = ++storyReadToken;
+  if (!round || round.kind !== "storybook" || round.phase !== "read") return;
+  const book = round.book;
+  const pages = whole ? book.pages.map((_, i) => i) : [round.page];
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  for (let n = 0; n < pages.length; n += 1) {
+    const i = pages[n];
+    if (token !== storyReadToken || !round || round.phase !== "read") return;
+    if (round.page !== i) {
+      round.page = i;
+      render();
+    }
+    const page = book.pages[i];
+    await speakThen(page.en, "en", token);
+    await speakThen(page.zh, "zh", token);
+  }
 }
 
 function speak(text, lang) {
@@ -911,6 +989,7 @@ function emptyVariantMemory() {
   return {
     garage: { story: [], park: [], bay: [], build: [], box: [] },
     house: { story: [], park: [], bay: [], build: [], box: [] },
+    storybook: { story: [] },
   };
 }
 
@@ -918,7 +997,7 @@ function loadVariantMemory() {
   const raw = loadState().recentVariants;
   const base = emptyVariantMemory();
   if (!raw || typeof raw !== "object") return base;
-  ["garage", "house"].forEach((theme) => {
+  ["garage", "house", "storybook"].forEach((theme) => {
     if (!raw[theme] || typeof raw[theme] !== "object") return;
     ["story", "park", "bay", "build", "box"].forEach((box) => {
       if (Array.isArray(raw[theme][box])) base[theme][box] = raw[theme][box].slice(-12);
@@ -930,6 +1009,7 @@ function loadVariantMemory() {
 const lastVariant = loadVariantMemory();
 
 function rememberVariant(theme, box, kind) {
+  if (!lastVariant[theme]) return;
   const recent = (lastVariant[theme][box] || []).filter((k) => k !== kind).concat(kind).slice(-12);
   lastVariant[theme][box] = recent;
   const stored = loadVariantMemory();
@@ -3786,7 +3866,10 @@ setInterval(() => {
 }, 20000);
 
 function themeId() {
-  return loadState().theme === "house" ? "house" : "garage";
+  const theme = loadState().theme;
+  if (theme === "house") return "house";
+  if (theme === "storybook") return "storybook";
+  return "garage";
 }
 
 function themeCluster(n, color) {
@@ -3794,6 +3877,20 @@ function themeCluster(n, color) {
 }
 
 function themePack() {
+  if (themeId() === "storybook") {
+    return {
+      id: "storybook",
+      brandEn: "Story Time",
+      brandZh: "故事书",
+      heroH: "One story at a time.",
+      heroP: "Sit together. First we listen. Then we stay on THIS story. Cars can wait.",
+      starsLabel: "Story stars on this device",
+      parentNote:
+        "Teacher note: he wanders off-topic. The yellow chip stays on screen so this story stays this story. If he talks about cars: “Cars after this book.” Stop if there are tears.",
+      boxes: [],
+      titles: { story: "Story Time" },
+    };
+  }
   if (themeId() === "house") {
     return {
       id: "house",
@@ -3910,7 +4007,7 @@ function topbar(title) {
       ? `<span class="icon-btn" style="visibility:hidden" aria-hidden="true">Home 回家</span>`
       : `<button class="icon-btn" type="button" data-go="home">Home 回家</button>`;
   const brand = view === "themes" ? "Pick a world" : pack.brandEn;
-  const sub = view === "themes" ? "Garage · 过家家" : pack.brandZh;
+  const sub = view === "themes" ? "Garage · 过家家 · 故事书" : pack.brandZh;
   return `<div class="topbar">
     ${homeBtn}
     <div class="brand"><strong>${title}</strong><span>${brand} · ${sub}</span></div>
@@ -3978,31 +4075,267 @@ function renderChoices(extraClass) {
   </div>`;
 }
 
+function bookSeqBeats(book) {
+  return book.seq.map((id) => {
+    const page = book.pages.find((p) => p.id === id);
+    return {
+      id,
+      en: page.en,
+      zh: page.zh,
+      art: sbImg(book.id, id, page.en),
+    };
+  });
+}
+
+function renderTopicAnchor(book) {
+  return `<div class="topic-anchor" aria-label="This story is about ${escapeAttr(book.topicEn)}">
+    ${sbImg(book.id, "topic", book.topicEn, "topic")}
+    <div class="topic-anchor-copy">
+      <b>This story is about ${escapeHtml(book.topicEn)}</b>
+      <span>这个故事说的是${escapeHtml(book.topicZh)}</span>
+    </div>
+  </div>`;
+}
+
+function renderGrownupScript(book, carNudge) {
+  const en = carNudge ? book.parentCarEn : book.parentStayEn;
+  const zh = carNudge ? book.parentCarZh : book.parentStayZh;
+  return `<p class="grownup-script">${escapeHtml(en)}${loadState().bilingual ? ` · ${escapeHtml(zh)}` : ""}</p>`;
+}
+
+function startBook(id) {
+  const book = STORY_BOOKS.find((b) => b.id === id);
+  if (!book) return;
+  beginPlay();
+  cancelStoryRead();
+  view = "book";
+  round = {
+    kind: "storybook",
+    book,
+    phase: "read",
+    page: 0,
+    didAutoRead: false,
+    belongPicked: [],
+    belongOrder: shuffle(
+      book.belongOn
+        .map((file) => ({ id: file, on: true, art: sbImg(book.id, file, file) }))
+        .concat([{ id: "car", on: false, art: photo("car-red", "red car") }])
+    ),
+    slots: Array(book.seq.length).fill(null),
+    selectedBeat: null,
+    qIndex: 0,
+    picked: null,
+    showCarNudge: false,
+  };
+  render();
+}
+
+function hookStoryBookRead() {
+  if (view !== "book" || !round || round.kind !== "storybook" || round.phase !== "read") return;
+  if (round.didAutoRead) return;
+  round.didAutoRead = true;
+  readStoryBookAloud(true);
+}
+
+function renderStoryShelf() {
+  const pack = themePack();
+  const s = loadState();
+  return `${topbar("Story Time")}
+    <section class="hero">
+      <h1>Pick a book · 选一本书</h1>
+      <p>Sit together. One short story. Stay with this story — cars can wait until the book is done.</p>
+    </section>
+    <div class="book-shelf">
+      ${STORY_BOOKS.map(
+        (b) => `<button class="play-card kid-btn book-cover" type="button" data-book="${b.id}" aria-label="${escapeAttr(b.titleEn + " " + b.titleZh)}">
+          <div class="thumb">${sbImg(b.id, "p1", b.titleEn, "scene")}</div>
+          <b>${escapeHtml(b.titleEn)}</b>
+          <small>${escapeHtml(b.titleZh)}</small>
+        </button>`
+      ).join("")}
+    </div>
+    ${renderWorldBar(pack)}
+    <p class="stars">${escapeHtml(pack.starsLabel)}: ${s.stars || 0}</p>
+    <p class="parent-note">${escapeHtml(pack.parentNote)}</p>`;
+}
+
+function renderBookRead() {
+  const book = round.book;
+  const page = book.pages[round.page];
+  const last = round.page === book.pages.length - 1;
+  const look = `${renderTopicAnchor(book)}
+      <p class="look-kicker">读 · Read · ${round.page + 1}/${book.pages.length}</p>
+      <div class="book-page-art">${sbImg(book.id, page.id, page.en, "scene book-scene")}</div>
+      <h2>${escapeHtml(page.en)}</h2>
+      <p>${loadState().bilingual ? escapeHtml(page.zh) : ""}</p>
+      ${langButtons(page.en, page.zh)}
+      ${renderGrownupScript(book, round.showCarNudge)}`;
+  const nav = `<div class="book-nav">
+      <button class="big ghost" type="button" data-action="book-prev" ${round.page === 0 ? "disabled" : ""}>Back · 上一页</button>
+      ${
+        last
+          ? `<button class="big" type="button" data-action="book-understand">理解 · Understand</button>`
+          : `<button class="big" type="button" data-action="book-next">Next · 下一页</button>`
+      }
+    </div>
+    <div class="play-actions">
+      <button class="big ghost" type="button" data-action="book-read-all">${hearIcon()} Hear the whole story · 全部听</button>
+    </div>`;
+  return `${topbar(book.titleEn + " · " + book.titleZh)}
+    ${playLayout(look, nav, "tap")}`;
+}
+
+function renderBookBelong() {
+  const book = round.book;
+  const needed = book.belongOn;
+  const got = needed.every((id) => round.belongPicked.includes(id));
+  const look = `${renderTopicAnchor(book)}
+      <h2>Does this belong in THIS story?</h2>
+      <p>We are talking about ${escapeHtml(book.topicEn)}. Tap the pictures that are still this story. Leave the car out.</p>
+      <p>${loadState().bilingual ? `我们在说${escapeHtml(book.topicZh)}。点还是这个故事的图。车子先放一边。` : ""}</p>
+      ${langButtons(
+        `We are talking about ${book.topicEn}. Which picture is still the ${book.topicEn} story?`,
+        `我们在说${book.topicZh}。哪一张还是${book.topicZh}的故事？`
+      )}
+      ${renderGrownupScript(book, round.showCarNudge)}`;
+  const answers = `<div class="answer-row belong-row">
+      ${round.belongOrder
+        .map((item) => {
+          const picked = round.belongPicked.includes(item.id);
+          const cls = picked ? "choice kid-btn belong-yes" : "choice kid-btn";
+          return `<button class="${cls}" type="button" data-belong="${item.id}" aria-label="${escapeAttr(item.id)}">${item.art}</button>`;
+        })
+        .join("")}
+    </div>
+    ${
+      got
+        ? `<div class="play-actions">${compactYes("book-sequence", "Then / 然后", "Yes — those pictures stay in this story.", "对，这些图还在这个故事里。", "This story stays this story.")}</div>`
+        : `<p class="parent-note">Parent waits. If he says “car”: “Cars after this book. Right now: ${escapeHtml(book.topicEn)}.”</p>`
+    }`;
+  return `${topbar("理解 · Understand")}
+    ${playLayout(look, answers, "tap")}`;
+}
+
+function renderBookSequence() {
+  const book = round.book;
+  const story = { beats: bookSeqBeats(book) };
+  const labels = storyLabels(story.beats.length);
+  const done = round.slots.every(Boolean);
+  const correct = sequenceIsCorrect();
+  const slotsHtml = renderSequenceSlots(story, labels);
+  const look = `${renderTopicAnchor(book)}
+      <h2>What happened in THIS story?</h2>
+      <p>Put First / Then / Last. Parent waits. First… then… last…</p>
+      ${langButtons("What happened first?", "先发生了什么？")}
+      ${renderGrownupScript(book, round.showCarNudge)}`;
+  if (done && correct) {
+    return `${topbar("理解 · Understand")}
+      ${playLayout(
+        look,
+        `${slotsHtml}${compactYes("book-ask", "提问 · Questions", "You lined up this story.", "这个故事排好了。")}`,
+        "place"
+      )}`;
+  }
+  const pool = story.beats.map((b) => b.id).filter((id) => !round.slots.includes(id));
+  return `${topbar("理解 · Understand")}
+    ${playLayout(
+      look,
+      `${slotsHtml}
+    <div class="cards-row answer-row">
+      ${pool
+        .map((id) => {
+          const b = story.beats.find((x) => x.id === id);
+          const picked = round.selectedBeat === id ? " picked" : "";
+          return `<button class="scene kid-btn${picked}" type="button" data-pick="${id}" data-drag="${id}">${b.art}</button>`;
+        })
+        .join("")}
+    </div>
+    ${
+      done && !correct
+        ? `<div class="play-actions retry-note"><p>Let’s look again. This story is about ${escapeHtml(book.topicEn)}.</p>
+           <button class="big" type="button" data-action="reset-slots">Try the pictures again</button></div>`
+        : ""
+    }`,
+      "place"
+    )}`;
+}
+
+function bookQuestionChoices() {
+  const q = round.book.questions[round.qIndex];
+  const opts = shuffle([
+    { id: "ok", ok: true, art: sbRefArt(q.correct) },
+    ...q.foils.map((foil, i) => ({ id: `no-${i}`, ok: false, art: sbRefArt(foil), car: foil.kind === "car" })),
+  ]);
+  return opts;
+}
+
+function renderBookAsk() {
+  const book = round.book;
+  const q = book.questions[round.qIndex];
+  if (!round.choices) round.choices = bookQuestionChoices();
+  const last = round.qIndex >= book.questions.length - 1;
+  const picked = (round.choices || []).find((c) => c.id === round.picked);
+  const look = `${renderTopicAnchor(book)}
+      <p class="look-kicker">提问 · ${round.qIndex + 1}/3</p>
+      <h2>${escapeHtml(q.promptEn)}</h2>
+      <p>${loadState().bilingual ? escapeHtml(q.promptZh) : ""}</p>
+      ${langButtons(q.promptEn, q.promptZh)}
+      ${renderGrownupScript(book, round.showCarNudge || (picked && !picked.ok && picked.car))}
+      <p class="grownup-script">Pictures only — he listens, he does not read print.</p>`;
+  let extra = "";
+  if (picked && picked.ok) {
+    extra = last
+      ? compactYes("another-book", "Another book · 再看一本", "You stayed with this story.", "你一直跟着这个故事。")
+      : `<div class="play-actions"><button class="big" type="button" data-action="book-next-q">Next question · 下一题</button></div>`;
+  } else if (picked && !picked.ok) {
+    extra = `<div class="play-actions retry-note"><p>${
+      picked.car
+        ? escapeHtml(book.parentCarEn) + (loadState().bilingual ? " " + escapeHtml(book.parentCarZh) : "")
+        : "Let’s look at THIS story again. Try another picture."
+    }</p></div>`;
+  }
+  return `${topbar("提问 · Comprehension")}
+    ${playLayout(look, `${renderChoices()}${extra}`, "tap")}`;
+}
+
+function renderBook() {
+  if (!round || round.kind !== "storybook") return renderStoryShelf();
+  if (round.phase === "belong") return renderBookBelong();
+  if (round.phase === "sequence") return renderBookSequence();
+  if (round.phase === "ask") return renderBookAsk();
+  return renderBookRead();
+}
+
 function renderThemes() {
   return `${topbar("Which world?")}
     <section class="hero">
       <h1>Pick a world · 选一个世界</h1>
-      <p>Tap a picture door. Cars and a ramp, or a house with a stove and a bed. Parent can read the labels.</p>
+      <p>Three picture doors. Cars, playing house, or story books. Parent sits with him.</p>
     </section>
-    <div class="theme-doors">
+    <div class="theme-doors doors-3">
       <button class="theme-door kid-btn" type="button" data-theme="garage" aria-label="Garage 小车库">
         ${garageWorldArt()}
-        <b>Garage</b>
-        <small>小车库 · cars, ramp, parking</small>
+        <b>小车库</b>
+        <small>Garage · cars, ramp</small>
       </button>
       <button class="theme-door kid-btn" type="button" data-theme="house" aria-label="过家家 Playing house">
         ${houseWorldArt()}
         <b>过家家</b>
-        <small>Playing house · stove, bowls, bed</small>
+        <small>Playing house · stove, bed</small>
+      </button>
+      <button class="theme-door kid-btn" type="button" data-theme="storybook" aria-label="Story Time 故事书">
+        ${storybookWorldArt()}
+        <b>故事书</b>
+        <small>Story Time · listen, stay on the story</small>
       </button>
     </div>
-    <p class="parent-note">Next open remembers this world. The big 换主题 bar on the next screen switches worlds. Home 回家 from a game goes to the four boxes; tap Home again (or the picture bar) to come back here.</p>`;
+    <p class="parent-note">Next open remembers this world. Story Time is its own shelf of books — not the garage games. Home 回家 from a game goes to that world’s home; tap Home again to come back here.</p>`;
 }
 
 function renderWorldBar(pack) {
-  const otherIsHouse = pack.id !== "house";
-  const pic = otherIsHouse ? houseWorldArt() : garageWorldArt();
-  const hint = otherIsHouse ? "Go to 过家家" : "Go to Garage 小车库";
+  const pic = pack.id === "storybook" ? garageWorldArt() : storybookWorldArt();
+  const hint =
+    pack.id === "storybook" ? "Go to Garage or 过家家" : "故事书 Story Time, or switch worlds";
   return `<button class="world-bar kid-btn" type="button" data-go="themes" aria-label="换主题 Change world">
     ${pic}
     <span class="world-bar-copy">
@@ -4821,7 +5154,7 @@ function renderSettings() {
   return `${topbar("Grown-up settings")}
     <div class="settings allow-scroll">
       <h2>For the parent</h2>
-      <p>The handbook is the main plan. This page is extra. Sit with him; start with stories. Two worlds: Garage 小车库 and 过家家. Switch with the big picture bar on home. The five boxes stay; puzzles inside shuffle.</p>
+      <p>The handbook is the main plan. This page is extra. Sit with him; start with stories. Three worlds: Garage 小车库, 过家家, and 故事书 Story Time. Switch with the big picture bar on home. Garage and house keep the five boxes. Story Time is a shelf of short books for staying on one topic.</p>
       <label>English + 中文 labels
         <input type="checkbox" data-set="bilingual" ${s.bilingual ? "checked" : ""}/>
       </label>
@@ -4859,6 +5192,7 @@ function renderSettings() {
         <input type="checkbox" data-play="box" ${s.plays.box !== false ? "checked" : ""}/>
       </label>
       <p class="cogat-hint">Three spoken hints, then four pictures. The box opens when the picture matches. No reading required.</p>
+      <p class="cogat-hint">故事书 Story Time (third door): staying on one topic (teacher request), then who/what/where, first/last, and a little “how does he feel” — listening + pictures, not decoding print. Off-topic cars are a foil, never a scolding.</p>
       <p style="margin-top:12px;color:var(--muted);font-size:0.9rem">Stars saved on this device only. No account. CogAT words stay in this grown-up screen only.</p>
       <p class="cogat-hint">Same page on phone and iPad — one address. In Safari: Share (方块加箭头) → Add to Home Screen / 添加到主屏幕. Both devices can do this. Mac stays awake on the same Wi-Fi with the server running. This is a home-screen web app, not an App Store app.</p>
     </div>`;
@@ -4924,8 +5258,9 @@ function hookStoryVideo() {
 function render() {
   let html = "";
   if (view === "themes") html = renderThemes();
-  else if (view === "home") html = renderHome();
+  else if (view === "home") html = themeId() === "storybook" ? renderStoryShelf() : renderHome();
   else if (view === "settings") html = renderSettings();
+  else if (view === "book") html = renderBook();
   else if (view === "story") html = renderStory();
   else if (view === "park") html = renderPark();
   else if (view === "bay") html = renderBay();
@@ -4937,6 +5272,7 @@ function render() {
   app.innerHTML = `<div class="${stageClass}">${body}</div>${renderOverlay()}`;
   pinPlayActions();
   hookStoryVideo();
+  hookStoryBookRead();
 }
 
 function pinPlayActions() {
@@ -4969,7 +5305,7 @@ function parkAdd() {
 app.addEventListener("click", (e) => {
   if (Date.now() < suppressClickUntil) return;
   const t = e.target.closest(
-    "[data-go],[data-theme],[data-speak],[data-action],[data-pick],[data-unslot],[data-choice],[data-unpark],[data-piece],[data-gslot],[data-gate],#grownup"
+    "[data-go],[data-theme],[data-speak],[data-action],[data-pick],[data-unslot],[data-choice],[data-unpark],[data-piece],[data-gslot],[data-gate],[data-book],[data-belong],#grownup"
   );
   if (!t) return;
 
@@ -4977,8 +5313,34 @@ app.addEventListener("click", (e) => {
 
   if (t.dataset.theme) {
     overlay = null;
+    cancelStoryRead();
     saveState({ theme: t.dataset.theme });
     view = "home";
+    render();
+    return;
+  }
+
+  if (t.dataset.book) {
+    overlay = null;
+    startBook(t.dataset.book);
+    return;
+  }
+
+  if (t.dataset.belong) {
+    const id = t.dataset.belong;
+    const item = (round.belongOrder || []).find((x) => x.id === id);
+    if (!item) return;
+    if (!item.on) {
+      round.showCarNudge = true;
+      celebrate("wrong");
+      render();
+      return;
+    }
+    if (!round.belongPicked.includes(id)) round.belongPicked.push(id);
+    round.showCarNudge = false;
+    if (round.book.belongOn.every((need) => round.belongPicked.includes(need))) {
+      celebrate("correct");
+    }
     render();
     return;
   }
@@ -4986,6 +5348,7 @@ app.addEventListener("click", (e) => {
   if (t.dataset.go) {
     overlay = null;
     if (t.dataset.go === "home") {
+      cancelStoryRead();
       view = view === "home" ? "themes" : "home";
       render();
       return;
@@ -5008,6 +5371,7 @@ app.addEventListener("click", (e) => {
   }
 
   if (t.dataset.speak) {
+    cancelStoryRead();
     speak(t.dataset.text, t.dataset.speak);
     return;
   }
@@ -5032,8 +5396,65 @@ app.addEventListener("click", (e) => {
     return;
   }
   if (t.dataset.action === "reset-slots") {
-    round.slots = Array(round.story.beats.length).fill(null);
+    const n = round.story ? round.story.beats.length : round.book ? round.book.seq.length : 0;
+    round.slots = Array(n).fill(null);
     round.selectedBeat = null;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-next") {
+    cancelStoryRead();
+    if (round.page < round.book.pages.length - 1) round.page += 1;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-prev") {
+    cancelStoryRead();
+    if (round.page > 0) round.page -= 1;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-read-all") {
+    round.page = 0;
+    round.didAutoRead = true;
+    render();
+    readStoryBookAloud(true);
+    return;
+  }
+  if (t.dataset.action === "book-understand") {
+    cancelStoryRead();
+    round.phase = "belong";
+    round.showCarNudge = false;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-sequence") {
+    round.phase = "sequence";
+    round.slots = Array(round.book.seq.length).fill(null);
+    round.selectedBeat = null;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-ask") {
+    round.phase = "ask";
+    round.qIndex = 0;
+    round.picked = null;
+    round.choices = null;
+    render();
+    return;
+  }
+  if (t.dataset.action === "book-next-q") {
+    round.qIndex += 1;
+    round.picked = null;
+    round.choices = null;
+    round.showCarNudge = false;
+    render();
+    return;
+  }
+  if (t.dataset.action === "another-book") {
+    cancelStoryRead();
+    view = "home";
+    round = null;
     render();
     return;
   }
@@ -5081,8 +5502,14 @@ app.addEventListener("click", (e) => {
     round.picked = t.dataset.choice;
     if (choiceIsCorrect()) {
       if (round.kind === "mystery") round.opened = true;
+      if (round.kind === "storybook" && round.phase === "ask") {
+        const last = round.qIndex >= round.book.questions.length - 1;
+        if (last) addStarOnce();
+      }
       celebrate("correct");
     } else {
+      const picked = (round.choices || []).find((c) => c.id === round.picked);
+      if (picked && picked.car) round.showCarNudge = true;
       celebrate("wrong");
     }
     render();
@@ -5164,7 +5591,10 @@ function slotFromPoint(x, y) {
 }
 
 function canSequenceDrag() {
-  return view === "story" && round && round.kind === "sequence";
+  return (
+    (view === "story" && round && round.kind === "sequence") ||
+    (view === "book" && round && round.phase === "sequence")
+  );
 }
 
 app.addEventListener("pointerdown", (e) => {
