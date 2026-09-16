@@ -4,7 +4,7 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-25";
+const PHOTO_V = "parent-26";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
@@ -838,6 +838,16 @@ function chineseVoices(voices) {
   return (voices || []).filter((voice) => isZhVoice(voice) || isYueVoice(voice));
 }
 
+function isChineseFirstVoice(voice) {
+  return isZhVoice(voice) || isYueVoice(voice);
+}
+
+function voiceOptionLabel(voice) {
+  const name = String((voice && voice.name) || "").trim() || "(unnamed)";
+  const lang = String((voice && voice.lang) || "").trim();
+  return lang ? `${name} · ${lang}` : name;
+}
+
 function scorePreferredZhVoice(voice) {
   const raw = String((voice && voice.name) || "");
   const name = foldVoiceName(raw);
@@ -870,13 +880,13 @@ function scorePreferredZhVoice(voice) {
 }
 
 function pickPreferredZhVoice(voices) {
-  const list = chineseVoices(voices);
+  const all = voices || [];
   const saved = String((loadState().speechVoiceURI || "").trim());
   if (saved) {
-    const match = list.find((voice) => voiceKey(voice) === saved);
+    const match = all.find((voice) => voiceKey(voice) === saved);
     if (match) return match;
   }
-  const ranked = list.slice().sort((a, b) => {
+  const ranked = chineseVoices(all).slice().sort((a, b) => {
     const diff = scorePreferredZhVoice(b) - scorePreferredZhVoice(a);
     if (diff) return diff;
     return String(a.name || "").localeCompare(String(b.name || ""), "zh");
@@ -884,18 +894,25 @@ function pickPreferredZhVoice(voices) {
   return ranked[0] || null;
 }
 
-function chineseVoicesSorted(voices) {
-  return chineseVoices(voices).slice().sort((a, b) => {
-    const diff = scorePreferredZhVoice(b) - scorePreferredZhVoice(a);
-    if (diff) return diff;
-    return String(a.name || "").localeCompare(String(b.name || ""), "zh");
+function allVoicesSorted(voices) {
+  return (voices || []).slice().sort((a, b) => {
+    const aZh = isChineseFirstVoice(a) ? 1 : 0;
+    const bZh = isChineseFirstVoice(b) ? 1 : 0;
+    if (aZh !== bZh) return bZh - aZh;
+    if (aZh) {
+      const diff = scorePreferredZhVoice(b) - scorePreferredZhVoice(a);
+      if (diff) return diff;
+    }
+    const nameCmp = String(a.name || "").localeCompare(String(b.name || ""), "zh");
+    if (nameCmp) return nameCmp;
+    return String(a.lang || "").localeCompare(String(b.lang || ""));
   });
 }
 
-function renderChineseVoiceOptions() {
-  const voices = chineseVoicesSorted(collectSpeechVoices());
+function renderSpeechVoiceOptions() {
+  const voices = allVoicesSorted(collectSpeechVoices());
   if (!voices.length) {
-    return `<option value="">正在读取本机中文声音…</option>`;
+    return `<option value="">正在读取本机声音…</option>`;
   }
   const saved = String((loadState().speechVoiceURI || "").trim());
   const savedOk = saved && voices.some((voice) => voiceKey(voice) === saved);
@@ -903,7 +920,7 @@ function renderChineseVoiceOptions() {
   return voices
     .map((voice) => {
       const key = voiceKey(voice);
-      const label = `${voice.name || "中文"} · ${voice.lang || ""}`;
+      const label = voiceOptionLabel(voice);
       return `<option value="${escapeAttr(key)}" ${key === selectedKey ? "selected" : ""}>${escapeHtml(label)}</option>`;
     })
     .join("");
@@ -943,7 +960,7 @@ function refreshSettingsVoiceSelect() {
     render();
     return;
   }
-  const next = renderChineseVoiceOptions();
+  const next = renderSpeechVoiceOptions();
   if (select.innerHTML === next) return;
   select.innerHTML = next;
 }
@@ -960,6 +977,10 @@ function warmSpeechVoices() {
   } else {
     speechSynthesis.onvoiceschanged = onChange;
   }
+  /* iOS Safari often fires voiceschanged late, or not at all. */
+  [300, 1000].forEach((ms) => {
+    setTimeout(onChange, ms);
+  });
 }
 
 /* Unlock speak() on this tap so iOS still accepts speech after we wait for voices. */
@@ -5315,10 +5336,11 @@ function renderSettings() {
       </label>
       <label>声音
         <select data-set="speechVoiceURI">
-          ${renderChineseVoiceOptions()}
+          ${renderSpeechVoiceOptions()}
         </select>
       </label>
-      <p class="cogat-hint">优先 Yue / 月 / 玥（普通话小孩音）。iPad 设置里的「朗读内容」不会自动给网页用，要在这里选。故事书只读中文，一页一句。</p>
+      <p class="cogat-hint">Safari 网页通常只能用 Tingting / Meijia，设置里的 Yue 可能给不了网页。</p>
+      <p class="cogat-hint">下拉框列出网页能看到的全部声音（名字 + 语言）。故事书只读中文，一页一句。</p>
       <label>Gentle break reminder
         <select data-set="sessionMin">
           ${[5, 8, 10, 15]

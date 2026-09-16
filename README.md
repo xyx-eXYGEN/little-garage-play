@@ -61,9 +61,9 @@ If an old Home Screen icon still points at `localhost:8765` or a LAN IP, **delet
 
 After a deploy, Safari / Home Screen may still show the old page.
 
-**Voice:** the webpage must pick the voice in JavaScript. iPad **Settings → Spoken Content** does **not** automatically change this site. After a hard refresh, tap **Grown-up / 家长** twice (you will see 这是给大人的，再按一次), tap the yellow car, and choose **Yue** in **声音**. Mac may not list Yue; the iPad will.
+**Voice:** the Grown-up **声音** dropdown lists every voice Safari’s Web Speech API exposes (`name · lang`). iPad **Settings → Spoken Content** does **not** give premium/child voices to websites. Safari pages usually only get Ting-Ting / Mei-Jia; Yue (普通话小孩音) in Settings may never appear here.
 
-**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-25` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
+**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-26` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
 
 A real App Store / `.ipa` app would need Apple signing and TestFlight later.
 
