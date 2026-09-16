@@ -1,0 +1,36 @@
+{
+  "storyId": "cook-set-eat",
+  "titleEn": "Cook, set the plate, eat dumplings",
+  "titleZh": "做饭、摆盘子、吃饺子",
+  "theme": "house",
+  "video": "story.mp4",
+  "durationSec": 6.5,
+  "snips": [
+    {
+      "file": "beat-1.jpg",
+      "beatId": "a",
+      "labelEn": "First we cook on the stove.",
+      "labelZh": "先：在炉子上做饭。"
+    },
+    {
+      "file": "beat-2.jpg",
+      "beatId": "b",
+      "labelEn": "Then we set the dinner plate and the cup.",
+      "labelZh": "然后：摆好盘子和杯子。"
+    },
+    {
+      "file": "beat-3.jpg",
+      "beatId": "c",
+      "labelEn": "Last we eat dumplings.",
+      "labelZh": "最后：吃饺子。"
+    }
+  ],
+  "labels": {
+    "first": "First we cook on the stove.",
+    "then": "Then we set the dinner plate and the cup.",
+    "last": "Last we eat dumplings.",
+    "firstZh": "先：在炉子上做饭。",
+    "thenZh": "然后：摆好盘子和杯子。",
+    "lastZh": "最后：吃饺子。"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "storyId": "gas",
+  "video": "story.mp4",
+  "snips": ["beat-1.jpg", "beat-2.jpg", "beat-3.jpg", "beat-4.jpg"],
+  "labels": ["First", "Next", "Then", "Last"],
+  "notes": "Garage sequence gas (4 beats). Snips are the exact frames stitched into story.mp4. Hook video to sequence success; option tiles should use these snips. Vehicle: same fire truck. Lines — First: the fire truck is ready / 先：消防车准备好了。 Next: Dad uses the keys / 接着：爸爸用钥匙。 Then: the fire truck drives on the road / 然后：消防车在路上开。 Last: the fire truck parks at the fire station / 最后：消防车停进消防站。"
+}

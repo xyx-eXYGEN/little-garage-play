@@ -1,0 +1,36 @@
+{
+  "storyId": "bath-pj-bed",
+  "titleEn": "Bath, clothes, bed",
+  "titleZh": "洗澡、穿衣服、上床",
+  "theme": "house",
+  "video": "story.mp4",
+  "durationSec": 6.5,
+  "snips": [
+    {
+      "file": "beat-1.jpg",
+      "beatId": "a",
+      "labelEn": "First we take a bath. Splash!",
+      "labelZh": "先：洗澡。哗啦！"
+    },
+    {
+      "file": "beat-2.jpg",
+      "beatId": "b",
+      "labelEn": "Then we put on clothes for bed.",
+      "labelZh": "然后：穿上睡觉的衣服。"
+    },
+    {
+      "file": "beat-3.jpg",
+      "beatId": "c",
+      "labelEn": "Last we climb into bed.",
+      "labelZh": "最后：爬上床。"
+    }
+  ],
+  "labels": {
+    "first": "First we take a bath. Splash!",
+    "then": "Then we put on clothes for bed.",
+    "last": "Last we climb into bed.",
+    "firstZh": "先：洗澡。哗啦！",
+    "thenZh": "然后：穿上睡觉的衣服。",
+    "lastZh": "最后：爬上床。"
+  }
+}

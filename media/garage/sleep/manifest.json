@@ -1,0 +1,7 @@
+{
+  "storyId": "sleep",
+  "video": "story.mp4",
+  "snips": ["beat-1.jpg", "beat-2.jpg", "beat-3.jpg"],
+  "labels": ["First", "Then", "Last"],
+  "notes": "Garage sequence sleep (3 beats). Snips are the exact frames stitched into story.mp4. Hook video to sequence success; option tiles should use these snips. Vehicle: same red sports car. Lines — First: the red sports car drives on the road / 先：红色跑车在路上开。 Then: the sports car goes up the ramp / 然后：跑车开上坡道。 Last: the sports car parks in the garage. Night-night. / 最后：跑车停进车库。晚安。"
+}

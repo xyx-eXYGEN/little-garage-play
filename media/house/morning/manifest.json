@@ -1,0 +1,36 @@
+{
+  "storyId": "morning",
+  "titleEn": "Wake, dress, breakfast",
+  "titleZh": "起床、穿衣服、吃早饭",
+  "theme": "house",
+  "video": "story.mp4",
+  "durationSec": 6.5,
+  "snips": [
+    {
+      "file": "beat-1.jpg",
+      "beatId": "a",
+      "labelEn": "First we wake up in bed.",
+      "labelZh": "先：在床上醒来。"
+    },
+    {
+      "file": "beat-2.jpg",
+      "beatId": "b",
+      "labelEn": "Then we put on a shirt.",
+      "labelZh": "然后：穿上衣服。"
+    },
+    {
+      "file": "beat-3.jpg",
+      "beatId": "c",
+      "labelEn": "Last we eat bread and a banana.",
+      "labelZh": "最后：吃面包和香蕉。"
+    }
+  ],
+  "labels": {
+    "first": "First we wake up in bed.",
+    "then": "Then we put on a shirt.",
+    "last": "Last we eat bread and a banana.",
+    "firstZh": "先：在床上醒来。",
+    "thenZh": "然后：穿上衣服。",
+    "lastZh": "最后：吃面包和香蕉。"
+  }
+}

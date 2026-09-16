@@ -1,0 +1,7 @@
+{
+  "storyId": "friend",
+  "video": "story.mp4",
+  "snips": ["beat-1.jpg", "beat-2.jpg", "beat-3.jpg"],
+  "labels": ["First", "Then", "Last"],
+  "notes": "Garage sequence friend (3 beats). Snips are the exact frames stitched into story.mp4. Hook video to sequence success; option tiles should use these snips. Vehicles: same yellow car + same fire truck. Lines — First: the yellow car is alone / 先：黄色小车自己一个。 Then: a fire truck waves hello / 然后：消防车打招呼。 Last: they park next to each other / 最后：它们停在旁边。"
+}

@@ -1,0 +1,7 @@
+{
+  "storyId": "wash",
+  "video": "story.mp4",
+  "snips": ["beat-1.jpg", "beat-2.jpg", "beat-3.jpg"],
+  "labels": ["First", "Then", "Last"],
+  "notes": "Garage sequence wash (3 beats). Snips are the exact frames stitched into story.mp4. Hook video to sequence success; option tiles should use these snips. Vehicle: same dark-blue pickup. Lines — First: the pickup truck is dusty / 先：皮卡脏了。 Then: the pickup goes through the car wash. Splash! / 然后：皮卡去洗车。哗啦！ Last: the pickup truck is shiny and happy / 最后：皮卡亮亮的，开心。"
+}

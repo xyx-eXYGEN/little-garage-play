@@ -1,0 +1,36 @@
+{
+  "storyId": "wash-eat-sleep",
+  "titleEn": "Wash, eat rice, sleep",
+  "titleZh": "洗手、吃米饭、睡觉",
+  "theme": "house",
+  "video": "story.mp4",
+  "durationSec": 6.5,
+  "snips": [
+    {
+      "file": "beat-1.jpg",
+      "beatId": "a",
+      "labelEn": "First we wash our hands.",
+      "labelZh": "先：洗手。"
+    },
+    {
+      "file": "beat-2.jpg",
+      "beatId": "b",
+      "labelEn": "Then we eat rice in a bowl.",
+      "labelZh": "然后：用碗吃米饭。"
+    },
+    {
+      "file": "beat-3.jpg",
+      "beatId": "c",
+      "labelEn": "Last we go to sleep. Night-night.",
+      "labelZh": "最后：睡觉。晚安。"
+    }
+  ],
+  "labels": {
+    "first": "First we wash our hands.",
+    "then": "Then we eat rice in a bowl.",
+    "last": "Last we go to sleep. Night-night.",
+    "firstZh": "先：洗手。",
+    "thenZh": "然后：用碗吃米饭。",
+    "lastZh": "最后：睡觉。晚安。"
+  }
+}

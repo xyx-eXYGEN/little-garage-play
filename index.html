@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#f6e0cc" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="小车库" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>Little Garage · 过家家</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="stylesheet" href="styles.css?v=parent-19" />
+    <style>
+      html,
+      body {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        margin: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        overscroll-behavior-y: none;
+        touch-action: none;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      (function () {
+        function allowScroll(node) {
+          return !!(node && node.closest && node.closest(".allow-scroll, .play-scroll"));
+        }
+        function pin() {
+          if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
+        }
+        document.addEventListener(
+          "touchmove",
+          function (e) {
+            if (e.touches && e.touches.length > 1) {
+              e.preventDefault();
+              return;
+            }
+            if (!allowScroll(e.target)) e.preventDefault();
+          },
+          { passive: false, capture: true }
+        );
+        ["gesturestart", "gesturechange", "gestureend"].forEach(function (type) {
+          document.addEventListener(type, function (e) { e.preventDefault(); }, { passive: false });
+        });
+        window.addEventListener("scroll", pin, { passive: true });
+      })();
+    </script>
+    <div id="app"></div>
+    <script src="app.js?v=parent-19"></script>
+  </body>
+</html>
