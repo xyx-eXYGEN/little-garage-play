@@ -63,7 +63,7 @@ After a deploy, Safari / Home Screen may still show the old page.
 
 **Voice:** the Grown-up **声音** dropdown lists every voice Safari’s Web Speech API exposes (`name · lang`). iPad **Settings → Spoken Content** does **not** give premium/child voices to websites. Safari pages usually only get Ting-Ting / Mei-Jia; Yue (普通话小孩音) in Settings may never appear here.
 
-**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-31` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
+**Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-32` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
 
 A real App Store / `.ipa` app would need Apple signing and TestFlight later.
 
