@@ -917,6 +917,10 @@ button {
   min-height: 44px;
 }
 
+.settings select[data-set="speechVoiceURI"] {
+  max-width: min(58vw, 260px);
+}
+
 .overlay {
   position: fixed;
   inset: 0;

@@ -20,7 +20,7 @@ After Garage or 过家家 is picked, the familiar boxes appear. Story Time opens
 
 Preschool teacher: he starts a story, then goes off-topic. The books are short (one character, one problem, one ending). A **topic chip** stays on every screen (“this story is about the yellow hat”).
 
-1. **读 Read** — 听 reads **中文 only**, one whole page at a time (Taiwan 美佳 / zh-TW). Not English, not Yue/Cantonese. 4 illustrated pages, one scene each.
+1. **读 Read** — 听 reads **中文 only**, one whole page at a time. Prefers the Mandarin child voice **Yue** (月 / 玥) when the iPad reports it; otherwise Meijia. 4 illustrated pages, one scene each.
 2. **理解 Understand** — “Does this belong in THIS story?” (on-topic pictures vs a tempting car) then First / Then / Last.
 3. **提问 Comprehension** — 3 picture questions: who/what/where, first/last, and “which picture is still our story?”
 
@@ -61,7 +61,7 @@ If an old Home Screen icon still points at `localhost:8765` or a LAN IP, **delet
 
 After a deploy, Safari / Home Screen may still show the old page.
 
-**Voice:** **Yue = Cantonese 粤语**, not Taiwan 美佳. Stories are Mandarin. On the English iPad: **Settings → Accessibility → Spoken Content → Voices → Chinese**. Look for **Taiwan / Meijia 美佳**, not **Yue**. (Newer iPadOS: **Settings → Accessibility → Read & Speak → Voices → Chinese**.)
+**Voice:** the webpage must pick the voice in JavaScript. iPad **Settings → Spoken Content** does **not** automatically change this site. After a hard refresh, hold **Grown-up / 家长**, tap the yellow car, and choose **Yue** in **声音**. Mac may not list Yue; the iPad will.
 
 **Cache:** open `https://xyx-exygen.github.io/little-garage-play/?v=parent-23` in Safari (hard refresh). Then **delete the Home Screen icon and Add to Home Screen again** so the new JS is not stuck on a cached copy.
 

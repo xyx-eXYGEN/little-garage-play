@@ -4,12 +4,13 @@
 
 const STORAGE = "little-garage-v1";
 const PALETTE = ["#d94b3a", "#3a7ca5", "#e8b44c", "#5a9e6f", "#c07a4a", "#7a5ea6"];
-const PHOTO_V = "parent-23";
+const PHOTO_V = "parent-24";
 const RECENT_AVOID = 5;
 
 const DEFAULTS = {
   bilingual: true,
   speech: true,
+  speechVoiceURI: "",
   sessionMin: 8,
   plays: { story: true, park: true, bay: true, build: true, box: true },
   stars: 0,
@@ -730,12 +731,9 @@ function sequencePlace(beatId, slotIndex) {
   round.selectedBeat = null;
 }
 
-/* Taiwan Mandarin. Target: 美佳 / Meijia (zh-TW). Ting-Ting is last resort only. */
-const MEIJIA_NAME_HINTS = ["meijia", "mei-jia", "mei jia"];
+/* Prefer iPad Spoken Content child voice Yue (普通话小孩音), then Meijia. Never force zh-TW. */
 const TINGTING_NAME_HINTS = ["ting-ting", "tingting", "ting ting", "婷婷"];
-const TW_TINGTING_HINTS = TINGTING_NAME_HINTS;
-const TW_FEMALE_NAME_HINTS = ["meijia", "mei-jia", "mei jia", "xiaojia", "xiao-jia", "xiao jia"];
-
+const ZH_CHILD_NAME_HINTS = ["child", "kid", "toddler", "xiaohai", "tongsheng"];
 const ZH_MALE_NAME_HINTS = [
   "liang",
   "yunjian",
@@ -756,8 +754,8 @@ const ZH_MALE_NAME_HINTS = [
   "rocko",
 ];
 
-const ZH_RATE = 0.88;
-const ZH_PITCH = 0.98;
+const ZH_RATE = 0.92;
+const ZH_PITCH = 1;
 const EN_RATE = 0.95;
 
 let cachedSpeechVoices = [];
@@ -782,27 +780,31 @@ function isZhVoice(voice) {
   return voiceLangTag(voice).startsWith("zh");
 }
 
-function isZhTwVoice(voice) {
-  return voiceLangTag(voice).startsWith("zh-tw");
+function isZhCnVoice(voice) {
+  const lang = voiceLangTag(voice);
+  return lang === "zh" || lang.startsWith("zh-cn");
 }
 
-function isYueOrCantoneseVoice(voice) {
+function nameHasHint(name, hints) {
+  return hints.some((hint) => name.includes(hint));
+}
+
+function voiceKey(voice) {
+  if (!voice) return "";
+  return String(voice.voiceURI || `${voice.name || ""}||${voice.lang || ""}`);
+}
+
+function isCantoneseVoice(voice) {
   const raw = String((voice && voice.name) || "");
   const name = foldVoiceName(raw);
   const lang = voiceLangTag(voice);
   return (
     lang.startsWith("zh-hk") ||
     lang.startsWith("zh-yue") ||
-    lang.startsWith("yue") ||
     name.includes("cantonese") ||
-    /\byue\b/.test(name) ||
     raw.includes("粤") ||
     raw.includes("粵")
   );
-}
-
-function nameHasHint(name, hints) {
-  return hints.some((hint) => name.includes(hint));
 }
 
 function isLikelyMaleVoice(voice) {
@@ -811,47 +813,100 @@ function isLikelyMaleVoice(voice) {
   return nameHasHint(name, ZH_MALE_NAME_HINTS) || /\bmale\b/.test(name) || /\bman\b/.test(name);
 }
 
+function isYueVoice(voice) {
+  const raw = String((voice && voice.name) || "");
+  const uri = String((voice && voice.voiceURI) || "");
+  if (/yue/i.test(raw) || raw.includes("月") || raw.includes("玥")) return true;
+  return /(?:^|[._-])yue(?:[._-]|$)/i.test(uri) && !/zh-yue|zh_yue|cantonese/i.test(uri);
+}
+
+function isChildLikeZhVoice(voice) {
+  if (!isZhVoice(voice) || isCantoneseVoice(voice) || isYueVoice(voice)) return false;
+  const raw = String((voice && voice.name) || "");
+  const name = foldVoiceName(raw);
+  if (/小孩|儿童|兒童|童声|童聲|童音|小朋友|小孩音/.test(raw)) return true;
+  return nameHasHint(name, ZH_CHILD_NAME_HINTS);
+}
+
 function isMeijiaVoice(voice) {
   const raw = String((voice && voice.name) || "");
   const name = foldVoiceName(raw);
   return raw.includes("美佳") || nameHasHint(name, ["meijia", "mei-jia", "mei jia"]);
 }
 
-function scoreTaiwanVoice(voice) {
+function chineseVoices(voices) {
+  return (voices || []).filter((voice) => isZhVoice(voice) || isYueVoice(voice));
+}
+
+function scorePreferredZhVoice(voice) {
   const raw = String((voice && voice.name) || "");
   const name = foldVoiceName(raw);
   const lang = voiceLangTag(voice);
   let score = 0;
 
-  if (isYueOrCantoneseVoice(voice)) score -= 400;
-  else if (isZhTwVoice(voice)) score += 80;
-  else if (lang.startsWith("zh")) score += 8;
-
+  if (isYueVoice(voice)) {
+    score += 400;
+    if (isZhCnVoice(voice)) score += 40;
+  }
+  if (isChildLikeZhVoice(voice)) {
+    score += 220;
+    if (isZhCnVoice(voice)) score += 20;
+  }
   if (isMeijiaVoice(voice)) score += 160;
   if (raw.includes("曉佳") || raw.includes("晓佳") || nameHasHint(name, ["xiaojia", "xiao-jia", "xiao jia"])) {
-    score += 90;
+    score += 70;
   }
-  if (isZhTwVoice(voice) && nameHasHint(name, TW_TINGTING_HINTS)) score += 70;
-  if (nameHasHint(name, TW_FEMALE_NAME_HINTS)) score += 40;
-  if (name.includes("taiwan") || raw.includes("台灣") || raw.includes("台湾") || raw.includes("國語")) score += 25;
-  if (name.includes("female") || name.includes("woman")) score += 30;
+  if (nameHasHint(name, TINGTING_NAME_HINTS) || raw.includes("婷婷")) score += 40;
+  if (isZhCnVoice(voice)) score += 16;
+  else if (lang.startsWith("zh-tw")) score += 10;
+  else if (isCantoneseVoice(voice)) score -= 40;
+  else if (lang.startsWith("zh")) score += 6;
+
+  if (name.includes("female") || name.includes("woman")) score += 20;
   if (isLikelyMaleVoice(voice)) score -= 100;
   if (voice.localService) score += 6;
   if (name.includes("enhanced") || name.includes("premium") || name.includes("neural")) score += 8;
   return score;
 }
 
-function pickTaiwanFemaleVoice(voices) {
-  const list = (voices || []).filter((voice) => !isYueOrCantoneseVoice(voice));
-  const tw = list.filter(isZhTwVoice).slice().sort((a, b) => scoreTaiwanVoice(b) - scoreTaiwanVoice(a));
-  const twFemale = tw.filter((voice) => !isLikelyMaleVoice(voice));
-  if (twFemale.length) return twFemale[0];
-  if (tw.length) return tw[0];
+function pickPreferredZhVoice(voices) {
+  const list = chineseVoices(voices);
+  const saved = String((loadState().speechVoiceURI || "").trim());
+  if (saved) {
+    const match = list.find((voice) => voiceKey(voice) === saved);
+    if (match) return match;
+  }
+  const ranked = list.slice().sort((a, b) => {
+    const diff = scorePreferredZhVoice(b) - scorePreferredZhVoice(a);
+    if (diff) return diff;
+    return String(a.name || "").localeCompare(String(b.name || ""), "zh");
+  });
+  return ranked[0] || null;
+}
 
-  const zh = list.filter(isZhVoice).slice().sort((a, b) => scoreTaiwanVoice(b) - scoreTaiwanVoice(a));
-  const zhFemale = zh.filter((voice) => !isLikelyMaleVoice(voice));
-  if (zhFemale.length) return zhFemale[0];
-  return zh[0] || null;
+function chineseVoicesSorted(voices) {
+  return chineseVoices(voices).slice().sort((a, b) => {
+    const diff = scorePreferredZhVoice(b) - scorePreferredZhVoice(a);
+    if (diff) return diff;
+    return String(a.name || "").localeCompare(String(b.name || ""), "zh");
+  });
+}
+
+function renderChineseVoiceOptions() {
+  const voices = chineseVoicesSorted(collectSpeechVoices());
+  if (!voices.length) {
+    return `<option value="">正在读取本机中文声音…</option>`;
+  }
+  const saved = String((loadState().speechVoiceURI || "").trim());
+  const savedOk = saved && voices.some((voice) => voiceKey(voice) === saved);
+  const selectedKey = savedOk ? saved : voiceKey(pickPreferredZhVoice(voices));
+  return voices
+    .map((voice) => {
+      const key = voiceKey(voice);
+      const label = `${voice.name || "中文"} · ${voice.lang || ""}`;
+      return `<option value="${escapeAttr(key)}" ${key === selectedKey ? "selected" : ""}>${escapeHtml(label)}</option>`;
+    })
+    .join("");
 }
 
 function notifySpeechVoiceWaiters(voices) {
@@ -881,10 +936,25 @@ function whenSpeechVoicesReady() {
   });
 }
 
+function refreshSettingsVoiceSelect() {
+  if (view !== "settings") return;
+  const select = document.querySelector('select[data-set="speechVoiceURI"]');
+  if (!select) {
+    render();
+    return;
+  }
+  const next = renderChineseVoiceOptions();
+  if (select.innerHTML === next) return;
+  select.innerHTML = next;
+}
+
 function warmSpeechVoices() {
   if (!window.speechSynthesis) return;
   collectSpeechVoices();
-  const onChange = () => collectSpeechVoices();
+  const onChange = () => {
+    collectSpeechVoices();
+    refreshSettingsVoiceSelect();
+  };
   if (typeof speechSynthesis.addEventListener === "function") {
     speechSynthesis.addEventListener("voiceschanged", onChange);
   } else {
@@ -931,9 +1001,13 @@ function speakUtterance(text, lang, voices, opts) {
   }
   const u = new SpeechSynthesisUtterance(spoken);
   if (lang === "zh") {
-    const voice = pickTaiwanFemaleVoice(voices);
-    u.lang = "zh-TW";
-    if (voice) u.voice = voice;
+    const voice = pickPreferredZhVoice(voices);
+    if (voice) {
+      u.voice = voice;
+      u.lang = voice.lang || "zh-CN";
+    } else {
+      u.lang = "zh-CN";
+    }
     u.rate = ZH_RATE;
     u.pitch = ZH_PITCH;
   } else {
@@ -5235,7 +5309,12 @@ function renderSettings() {
       <label>Tap-to-hear speech
         <input type="checkbox" data-set="speech" ${s.speech ? "checked" : ""}/>
       </label>
-      <p class="cogat-hint">中文：台湾腔 · 美佳（zh-TW）。不要选 Yue（粤语／Cantonese）。故事书一次读整页，比较连贯。</p>
+      <label>声音
+        <select data-set="speechVoiceURI">
+          ${renderChineseVoiceOptions()}
+        </select>
+      </label>
+      <p class="cogat-hint">优先 Yue / 月 / 玥（普通话小孩音）。iPad 设置里的「朗读内容」不会自动给网页用，要在这里选。故事书只读中文，一页一句。</p>
       <label>Gentle break reminder
         <select data-set="sessionMin">
           ${[5, 8, 10, 15]
@@ -5627,6 +5706,9 @@ app.addEventListener("click", (e) => {
     overlay = null;
     view = "settings";
     render();
+    whenSpeechVoicesReady().then(() => {
+      if (view === "settings") refreshSettingsVoiceSelect();
+    });
     return;
   }
   if (t.dataset.gate) {
@@ -5639,6 +5721,9 @@ app.addEventListener("change", (e) => {
   const el = e.target;
   if (el.dataset.set === "bilingual" || el.dataset.set === "speech") {
     saveState({ [el.dataset.set]: el.checked });
+  }
+  if (el.dataset.set === "speechVoiceURI") {
+    saveState({ speechVoiceURI: el.value });
   }
   if (el.dataset.set === "sessionMin") {
     saveState({ sessionMin: Number(el.value) });
